@@ -1,6 +1,10 @@
-import json
+import re
+
 import requests
+import urllib3
 from bs4 import BeautifulSoup
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def get_page(page_url):
@@ -14,15 +18,16 @@ def get_page(page_url):
 def get_links(soup, div_class):
     """Function fetching data from <a>.text() in given div"""
 
-    # Use XPath to select elements
+    # select elements
     page_notices = soup.find_all("div", class_=div_class)
     new_notices = []
+
 
     # Iterate over the selected elements
     for notice in page_notices:
         # Find anchor tags within each element
         for link in notice.find_all('a'):
-            new_notices.append(link.get_text().strip())
+            new_notices.append(sanitise(link.get_text()))
 
     return new_notices
 
@@ -40,7 +45,11 @@ def get_texts(soup, div_class):
 
 def sanitise(val):
     """ Cleanup unwanted characters from data"""
-    return val.strip("\n").replace("\n\n", "-").replace("\n", " ")
+
+    val = val.strip("\n")
+    val = val.strip(".")
+    cleaned_text = re.sub(r'\n+', ' ', val)
+    return cleaned_text
 
 
 def combine_arrays(*arrays):
@@ -49,4 +58,4 @@ def combine_arrays(*arrays):
     combined_array = []
     for array in arrays:
         combined_array.extend(array)
-    return json.dumps({'data': combined_array})
+    return {'data': combined_array}

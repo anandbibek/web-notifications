@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gae_python38_app]
 # [START gae_python3_app]
-from flask import Flask
+from flask import Flask, jsonify
 from common.scraper import get_links, get_page, get_texts, combine_arrays
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -29,10 +28,22 @@ def hello():
     Returns:
         A string with the words 'Hello World!'.
     """
+
+    return 'Hello World'
+
+
+@app.route("/nita")
+def hello_nita():
+    """Return a friendly HTTP greeting.
+
+    Returns:
+        A string with the words 'Hello World!'.
+    """
     soup = get_page("https://nita.ac.in/")
     notices = get_links(soup, "notice_board_overflow")
     news = get_texts(soup, "news_card")
-    return combine_arrays(notices, news)
+    data = combine_arrays(notices, news)
+    return jsonify(**data)
 
 
 if __name__ == "__main__":
@@ -40,5 +51,6 @@ if __name__ == "__main__":
     # Engine, a webserver process such as Gunicorn will serve the app. You
     # can configure startup instructions by adding `entrypoint` to app.yaml.
     app.run(host="127.0.0.1", port=8080, debug=True)
+
 # [END gae_python3_app]
-# [END gae_python38_app]
+

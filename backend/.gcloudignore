@@ -12,6 +12,7 @@
 # Python dependencies:
 .venv/**
 .vscode/**
+__pycache__
 
 # tests
 main_test.py
