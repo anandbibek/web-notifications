@@ -1,2 +1,4 @@
 /.idea/**
 /backend/.venv/**
+/backend-cloud-func/
+/backend/*.data.json

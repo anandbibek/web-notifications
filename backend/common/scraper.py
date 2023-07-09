@@ -58,4 +58,4 @@ def combine_arrays(*arrays):
     combined_array = []
     for array in arrays:
         combined_array.extend(array)
-    return {'data': combined_array}
+    return combined_array
