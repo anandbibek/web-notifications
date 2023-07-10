@@ -15,7 +15,8 @@
 # [START gae_python3_app]
 from flask import Flask, jsonify
 
-from backend.common.comparator import get_diff_array
+from backend.common.util import get_diff_array
+from backend.common.messenger import send_notification
 from backend.common.storage import read_data_from_file, write_data_to_file
 from common.scraper import get_links, get_page, get_texts, combine_arrays
 
@@ -55,6 +56,8 @@ def hello_nita():
 
     if len(data_diff) > 0:
         write_data_to_file(BUCKET_NAME, filename, data_new)
+        body = "\n• ".join(data_new)
+        send_notification("test", "NITA Updates", body)
 
     return jsonify(data=data_diff)
 

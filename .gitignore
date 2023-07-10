@@ -2,3 +2,4 @@
 /backend/.venv/**
 /backend-cloud-func/
 /backend/*.data.json
+/backend/secrets/**

@@ -1,3 +1,6 @@
+import os
+
+
 def get_diff_array(array1, array2):
     set1 = set(array1)
     set2 = set(array2)
@@ -8,3 +11,8 @@ def get_diff_array(array1, array2):
 
 def map_data(array1):
     return {"data": array1}
+
+
+def is_running_on_cloud():
+    """Check if the code is running on a cloud platform (GCP)."""
+    return "K_SERVICE" in os.environ

@@ -20,3 +20,4 @@ requirements-test.txt
 
 #data files
 *.data.json
+secrets/**

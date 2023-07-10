@@ -1,14 +1,10 @@
-import os
 import json
 from google.cloud import storage
 
+from backend.common.util import is_running_on_cloud
+
 # Create storage_client instance outside of functions
 storage_client = storage.Client()
-
-
-def is_running_on_cloud():
-    """Check if the code is running on a cloud platform (GCP)."""
-    return "K_SERVICE" in os.environ
 
 
 def write_data_to_file(bucket_name, filename, data):
