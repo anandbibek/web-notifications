@@ -47,5 +47,5 @@ def get_bucket(name):
     bucket = storage_client.bucket(name)
     if not bucket.exists():
         print("Creating bucket: ", name)
-        bucket.create()
+        bucket.create(location="us-central1")
     return bucket
