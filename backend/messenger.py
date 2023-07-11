@@ -1,7 +1,7 @@
 import firebase_admin
 from firebase_admin import messaging, credentials
 
-from backend.common.util import is_running_on_cloud
+from util import is_running_on_cloud
 
 if is_running_on_cloud():
     firebase_admin.initialize_app()

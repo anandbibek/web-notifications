@@ -8,6 +8,7 @@
 #
 
 .gcloudignore
+deploy.sh
 
 # Python dependencies:
 .venv/**
@@ -15,9 +16,14 @@
 __pycache__
 
 # tests
-main_test.py
-requirements-test.txt
+*test.py
+*test.txt
 
-#data files
+# web runtime
+*web.py
+
+# data files
 *.data.json
+
+# secrets
 secrets/**

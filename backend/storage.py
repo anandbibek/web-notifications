@@ -1,17 +1,21 @@
 import json
 from google.cloud import storage
+from google.cloud.exceptions import NotFound
 
-from backend.common.util import is_running_on_cloud
+from util import is_running_on_cloud
+
+# Constants
+BUCKET_NAME = "com-anandbibek-web-notifications-data"
 
 # Create storage_client instance outside of functions
 storage_client = storage.Client()
 
 
-def write_data_to_file(bucket_name, filename, data):
+def write_data_to_file(filename, data):
     """Write data to a file in the bucket or locally."""
     if is_running_on_cloud():
         # Write to GCS
-        bucket = storage_client.bucket(bucket_name)
+        bucket = get_bucket(BUCKET_NAME)
         blob = bucket.blob(filename)
         blob.upload_from_string(json.dumps(data))
     else:
@@ -20,13 +24,16 @@ def write_data_to_file(bucket_name, filename, data):
             json.dump(data, file)
 
 
-def read_data_from_file(bucket_name, filename):
+def read_data_from_file(filename):
     """Read data from a file in the bucket or locally."""
     if is_running_on_cloud():
         # Read from GCS
-        bucket = storage_client.bucket(bucket_name)
+        bucket = get_bucket(BUCKET_NAME)
         blob = bucket.blob(filename)
-        return json.loads(blob.download_as_text())
+        try:
+            return json.loads(blob.download_as_text())
+        except NotFound:
+            return ""
     else:
         # Read locally
         try:
@@ -34,3 +41,11 @@ def read_data_from_file(bucket_name, filename):
                 return json.load(file)
         except FileNotFoundError:
             return ""
+
+
+def get_bucket(name):
+    bucket = storage_client.bucket(name)
+    if not bucket.exists():
+        print("Creating bucket: ", name)
+        bucket.create()
+    return bucket
