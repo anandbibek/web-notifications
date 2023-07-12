@@ -1,6 +1,7 @@
 import json
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
+from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_ENFORCED
 
 from util import is_running_on_cloud
 
@@ -48,4 +49,11 @@ def get_bucket(name):
     if not bucket.exists():
         print("Creating bucket: ", name)
         bucket.create(location="us-central1")
+
+        # Set the bucket's ACL to prevent public access
+        bucket.iam_configuration.public_access_prevention = (
+            PUBLIC_ACCESS_PREVENTION_ENFORCED
+        )
+        bucket.patch()
+
     return bucket
