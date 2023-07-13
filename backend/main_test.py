@@ -12,13 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
+import main_web
+from scraper import get_page, get_links, get_texts
 
 
 def test_index():
-    main.app.testing = True
-    client = main.app.test_client()
+    main_web.app.testing = True
+    client = main_web.app.test_client()
 
     r = client.get("/")
     assert r.status_code == 200
     assert "Hello World" in r.data.decode("utf-8")
+
+
+def test_scraper_nita():
+    soup = get_page("https://nita.ac.in/")
+    notices = get_links(soup, "notice_board_overflow")
+    news = get_texts(soup, "news_card")
+
+    assert len(notices) > 0
+    assert len(news) > 0
