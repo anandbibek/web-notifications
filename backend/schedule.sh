@@ -4,9 +4,14 @@ delete_scheduler_job_if_exists() {
     job_name="$1"
     location="$2"
 
-    gcloud scheduler jobs describe "$job_name" --location "$location" >/dev/null 2>&1
+    gcloud scheduler jobs describe "$job_name" \
+      --project="$project" \
+      --location "$location" >/dev/null 2>&1
     if [ $? -eq 0 ]; then
-        gcloud scheduler jobs delete "$job_name" --location "$location" --quiet
+        gcloud scheduler jobs delete "$job_name" \
+          --project="$project" \
+          --location "$location" \
+          --quiet
     else
         echo "[$job_name]: Does not exist."
     fi
@@ -27,6 +32,8 @@ create_scheduler_job() {
             --schedule "$schedule" \
             --time-zone "$timezone" \
             --http-method "POST" \
+            --message-body "{\"action\": \"$action\"}" \
+            --headers "Content-Type=application/json" \
             --uri "$target_http_url" \
             --location "$location" \
 
@@ -36,15 +43,16 @@ create_scheduler_job() {
     fi
 }
 
-job_name="web-notification-schedule"
-location="us-central1"
+. ./set_project_properties.sh
+echo "Project: $project"
 echo "[$job_name]: Reconfiguring..."
 
 # Delete the job if it exists
-delete_scheduler_job_if_exists "$job_name" $location
+delete_scheduler_job_if_exists "$job_name" "$location"
+
+# target_http_url="https://us-central1-cloud-func-test-392314.cloudfunctions.net/web-notifications"
+target_http_url="https://${location}-${project}.cloudfunctions.net/${function_name}"
+echo "Target URL: $target_http_url"
 
 # Create a new job if it doesn't exist
-schedule="0 7-23/2 * * *"  # every day, every 2 hours from 07:00 to 23:00
-timezone="Asia/Kolkata"
-target_http_url="https://us-central1-cloud-func-test-392314.cloudfunctions.net/web-notifications"
 create_scheduler_job "$job_name" "$schedule" "$timezone" "$target_http_url" "$location"

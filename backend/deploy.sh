@@ -1,13 +1,15 @@
 #!/bin/sh
 
-echo "Deploying..."
+. ./set_project_properties.sh
+echo "Deploying... $project"
 
 gcloud functions deploy web-notifications \
   --gen2 \
-  --runtime=python311 \
-  --region=us-central1 \
+  --project="$project" \
+  --runtime="python311" \
+  --region="$location" \
   --source=. \
-  --entry-point=scan \
+  --entry-point="scan" \
   --trigger-http \
   --allow-unauthenticated \
   --ingress-settings internal-only \
