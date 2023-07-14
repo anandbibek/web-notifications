@@ -6,7 +6,7 @@ def get_diff_array(array1, array2):
     set2 = set(array2)
     diff_set = set1 - set2
     diff_array = list(diff_set)
-    print('DIFF: new {} - old {}'.format(len(set1), len(set2)))
+    print('DIFF: new {}, old {}, diff {}'.format(len(set1), len(set2), len(diff_array)))
     return diff_array
 
 
