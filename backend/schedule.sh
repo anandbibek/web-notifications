@@ -29,6 +29,7 @@ create_scheduler_job() {
         echo "[$job_name]: Already exists. Skipping creation."
     else
         gcloud scheduler jobs create http "$job_name" \
+            --project="$project" \
             --schedule "$schedule" \
             --time-zone "$timezone" \
             --http-method "POST" \
