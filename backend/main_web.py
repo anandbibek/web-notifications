@@ -14,7 +14,7 @@
 
 # [START gae_python3_app]
 from flask import Flask
-from scraper import scan_nita
+from actions import scan_nita
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.

@@ -3,7 +3,7 @@
 . ./set_project_properties.sh
 echo "Deploying... $project"
 
-gcloud functions deploy web-notifications \
+gcloud functions deploy "$function_name" \
   --gen2 \
   --project="$project" \
   --runtime="python311" \
