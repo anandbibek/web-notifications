@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.anandbibek.web.notifications.ui.home.GridWithCustomData
+import com.anandbibek.web.notifications.ui.home.SiteGrid
 import com.anandbibek.web.notifications.ui.theme.WebNotificationsTheme
-import customDataList
+import siteList
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
             WebNotificationsTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    GridWithCustomData(customDataList = customDataList)
+                    SiteGrid(siteList = siteList)
                 }
             }
         }
