@@ -1,4 +1,4 @@
-
+package com.anandbibek.web.notifications.data.sites
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Site
 

@@ -18,15 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.anandbibek.web.notifications.R
+import com.anandbibek.web.notifications.data.sites.siteList
 import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.theme.WebNotificationsTheme
-import siteList
 
 @Composable
 fun SiteGrid(siteList: List<Site>) {
@@ -48,12 +46,12 @@ fun GridItemCard(name: String, description: String, icon: Int, url: String) {
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
+            .clickable { /* TODO open new page */ },
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
-                .clickable { /* TODO open new page */ },
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
@@ -62,19 +60,11 @@ fun GridItemCard(name: String, description: String, icon: Int, url: String) {
                 modifier = Modifier
                     .size(100.dp)
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(18.dp))
             Text(
                 text = name,
-                fontSize = 16.sp,
-                color = Color.Black,
-                style = MaterialTheme.typography.labelLarge
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = description,
-                fontSize = 14.sp,
-                color = Color.Gray,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1
             )
         }
     }

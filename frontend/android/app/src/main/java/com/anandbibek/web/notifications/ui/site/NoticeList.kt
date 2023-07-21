@@ -22,24 +22,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.anandbibek.web.notifications.model.WebNotice
+import com.anandbibek.web.notifications.model.Notice
 import java.net.URL
 
 @Composable
-fun ListWithWebNotices(webNotices: List<WebNotice>) {
+fun ListWithWebNotices(notices: List<Notice>) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
-        items(webNotices.size) { index ->
-            val webNotice = webNotices[index]
+        items(notices.size) { index ->
+            val webNotice = notices[index]
             WebNoticeItemCard(webNotice)
         }
     }
 }
 
 @Composable
-fun WebNoticeItemCard(webNotice: WebNotice) {
+fun WebNoticeItemCard(notice: Notice) {
 
         Box(
             modifier = Modifier.padding(16.dp)
@@ -52,24 +52,24 @@ fun WebNoticeItemCard(webNotice: WebNotice) {
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = webNotice.title,
+                        text = notice.title,
                         style = MaterialTheme.typography.titleLarge
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = webNotice.data,
+                        text = notice.data,
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = webNotice.time,
+                        text = notice.time,
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
                 Icon(
-                    imageVector = if (webNotice.isStarred) Icons.Filled.Star else Icons.Default.Star,
+                    imageVector = if (notice.isStarred) Icons.Filled.Star else Icons.Default.Star,
                     contentDescription = null,
-                    tint = if (webNotice.isStarred) MaterialTheme.colorScheme.primary else Color.Gray,
+                    tint = if (notice.isStarred) MaterialTheme.colorScheme.primary else Color.Gray,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -80,15 +80,15 @@ fun WebNoticeItemCard(webNotice: WebNotice) {
 @Preview
 @Composable
 fun PreviewListWithWebNotices() {
-    val webNotices = listOf(
-        WebNotice(
+    val notices = listOf(
+        Notice(
             title = "Web Notice 1",
             data = "Data for Web Notice 1",
             url = URL("https://example.com/webnotice1"),
             time = "2 mins ago",
             isStarred = true
         ),
-        WebNotice(
+        Notice(
             title = "Web Notice 2",
             data = "Data for Web Notice 2",
             url = URL("https://example.com/webnotice2"),
@@ -97,5 +97,5 @@ fun PreviewListWithWebNotices() {
         ),
         // Add more WebNotice items here as needed
     )
-    ListWithWebNotices(webNotices = webNotices)
+    ListWithWebNotices(notices = notices)
 }
