@@ -1,4 +1,4 @@
-package com.anandbibek.web.notifications.ui.home
+package com.anandbibek.web.notifications.ui.homeview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,6 +25,7 @@ import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.data.sites.siteList
 import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.theme.WebNotificationsTheme
+
 
 @Composable
 fun SiteGrid(siteList: List<Site>) {
@@ -89,4 +90,3 @@ fun PreviewGridWithCustomData() {
         SiteGrid(siteList = siteList)
     }
 }
-

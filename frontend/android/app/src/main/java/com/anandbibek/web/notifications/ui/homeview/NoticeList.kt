@@ -1,4 +1,4 @@
-package com.anandbibek.web.notifications.ui.site
+package com.anandbibek.web.notifications.ui.homeview
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
