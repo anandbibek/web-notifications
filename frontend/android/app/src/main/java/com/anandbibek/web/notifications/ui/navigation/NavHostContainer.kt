@@ -63,7 +63,7 @@ fun NavHostContainer(
             )
 
             HomeRoute(
-                viewModel = homeViewModel
+                homeViewModel = homeViewModel
             )
         }
         composable(STARRED_ROUTE) {

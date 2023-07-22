@@ -7,9 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ListedSitesRepository : SitesRepository{
-    override suspend fun getSites(): Result<List<Site>> {
+    override suspend fun getSites(): List<Site> {
         return withContext(Dispatchers.IO) {
-            Result.success(siteList)
+            siteList
         }
     }
 }

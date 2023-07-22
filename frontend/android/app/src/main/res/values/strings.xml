@@ -3,4 +3,5 @@
   <string name="cd_more_actions">More actions</string>
   <string name="home">Home</string>
   <string name="starred">Starred</string>
+  <string name="site_load_failed">Failed to load site list</string>
 </resources>

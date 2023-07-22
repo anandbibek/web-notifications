@@ -11,6 +11,6 @@ class StarredNoticesRepository: NoticesRepository {
     }
 
     override fun getRepoName(): String {
-        TODO("Not yet implemented")
+        return "starred_notices"
     }
 }
