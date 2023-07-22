@@ -16,33 +16,68 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-        primary = Purple80,
-        secondary = PurpleGrey80,
-        tertiary = Pink80
+    primary = webDarkPrimary,
+    onPrimary = webDarkOnPrimary,
+    primaryContainer = webDarkPrimaryContainer,
+    onPrimaryContainer = webDarkOnPrimaryContainer,
+    inversePrimary = webDarkPrimaryInverse,
+    secondary = webDarkSecondary,
+    onSecondary = webDarkOnSecondary,
+    secondaryContainer = webDarkSecondaryContainer,
+    onSecondaryContainer = webDarkOnSecondaryContainer,
+    tertiary = webDarkTertiary,
+    onTertiary = webDarkOnTertiary,
+    tertiaryContainer = webDarkTertiaryContainer,
+    onTertiaryContainer = webDarkOnTertiaryContainer,
+    error = webDarkError,
+    onError = webDarkOnError,
+    errorContainer = webDarkErrorContainer,
+    onErrorContainer = webDarkOnErrorContainer,
+    background = webDarkBackground,
+    onBackground = webDarkOnBackground,
+    surface = webDarkSurface,
+    onSurface = webDarkOnSurface,
+    inverseSurface = webDarkInverseSurface,
+    inverseOnSurface = webDarkInverseOnSurface,
+    surfaceVariant = webDarkSurfaceVariant,
+    onSurfaceVariant = webDarkOnSurfaceVariant,
+    outline = webDarkOutline
 )
 
 private val LightColorScheme = lightColorScheme(
-        primary = Purple40,
-        secondary = PurpleGrey40,
-        tertiary = Pink40
-
-        /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = webLightPrimary,
+    onPrimary = webLightOnPrimary,
+    primaryContainer = webLightPrimaryContainer,
+    onPrimaryContainer = webLightOnPrimaryContainer,
+    inversePrimary = webLightPrimaryInverse,
+    secondary = webLightSecondary,
+    onSecondary = webLightOnSecondary,
+    secondaryContainer = webLightSecondaryContainer,
+    onSecondaryContainer = webLightOnSecondaryContainer,
+    tertiary = webLightTertiary,
+    onTertiary = webLightOnTertiary,
+    tertiaryContainer = webLightTertiaryContainer,
+    onTertiaryContainer = webLightOnTertiaryContainer,
+    error = webLightError,
+    onError = webLightOnError,
+    errorContainer = webLightErrorContainer,
+    onErrorContainer = webLightOnErrorContainer,
+    background = webLightBackground,
+    onBackground = webLightOnBackground,
+    surface = webLightSurface,
+    onSurface = webLightOnSurface,
+    inverseSurface = webLightInverseSurface,
+    inverseOnSurface = webLightInverseOnSurface,
+    surfaceVariant = webLightSurfaceVariant,
+    onSurfaceVariant = webLightOnSurfaceVariant,
+    outline = webLightOutline
 )
 
 @Composable
 fun WebNotificationsTheme(
-        darkTheme: Boolean = isSystemInDarkTheme(),
-        // Dynamic color is available on Android 12+
-        dynamicColor: Boolean = true,
-        content: @Composable () -> Unit
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -63,8 +98,9 @@ fun WebNotificationsTheme(
     }
 
     MaterialTheme(
-            colorScheme = colorScheme,
-            typography = Typography,
-            content = content
+        colorScheme = colorScheme,
+        typography = Typography,
+        shapes = shapes,
+        content = content
     )
 }
