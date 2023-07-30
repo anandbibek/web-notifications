@@ -3,8 +3,10 @@ package com.anandbibek.web.notifications.ui.homeview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.anandbibek.web.notifications.data.notices.NoticesRepository
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.model.ErrorMessage
+import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,7 +35,9 @@ sealed interface HomeUiState {
 
     data class StaticSites(
         val siteList: List<Site>,
+        val noticeList: List<Notice>?,
         val selectedSite: Site?,
+        val isSiteOpen : Boolean,
         override val isLoading: Boolean,
         override val errorMessages: List<ErrorMessage>,
         override val searchInput: String
@@ -45,10 +49,12 @@ sealed interface HomeUiState {
  */
 private data class HomeViewModelState(
     val siteList: List<Site>? = null,
-    val preSelectedSiteId: String?,
+    val noticeList: List<Notice>? = null,
+    val selectedSiteId: String?,
     val isLoading: Boolean = false,
     val errorMessages: List<ErrorMessage> = emptyList(),
-    val searchInput: String = ""
+    val searchInput: String = "",
+    val isSiteOpen: Boolean = false
 ) {
 
     /**
@@ -65,11 +71,13 @@ private data class HomeViewModelState(
         } else {
             HomeUiState.StaticSites(
                 siteList = siteList,
+                noticeList = noticeList,
                 isLoading = isLoading,
                 errorMessages = errorMessages,
                 searchInput = searchInput,
+                isSiteOpen = isSiteOpen,
                 selectedSite = siteList.find {
-                    it.id == preSelectedSiteId
+                    it.id == selectedSiteId
                 }
             )
         }
@@ -81,13 +89,15 @@ private data class HomeViewModelState(
  */
 class HomeViewModel private constructor(
     private val sitesRepository: SitesRepository?,
+    private val noticesRepository: NoticesRepository?,
     preSelectedSiteId: String?
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(
         HomeViewModelState(
             isLoading = true,
-            preSelectedSiteId = preSelectedSiteId
+            selectedSiteId = preSelectedSiteId,
+            isSiteOpen = preSelectedSiteId != null
         )
     )
 
@@ -119,6 +129,34 @@ class HomeViewModel private constructor(
         }
     }
 
+    fun backToSites() {
+        viewModelState.update {
+            it.copy(isSiteOpen = false)
+        }
+    }
+
+    /* select a site */
+    fun selectSite(siteId : String) {
+        viewModelState.update {
+            it.copy(
+                selectedSiteId = siteId,
+                isSiteOpen = true,
+                isLoading = true
+            )
+        }
+        fetchNotices(siteId)
+    }
+
+    private fun fetchNotices(siteId : String) {
+        val result = noticesRepository?.fetch()
+        viewModelState.update {
+            it.copy(
+                noticeList = result,
+                isLoading = false,
+            )
+        }
+    }
+
     /**
      * Notify that an error was displayed on the screen
      */
@@ -142,10 +180,11 @@ class HomeViewModel private constructor(
     companion object {
         fun provideFactory(
             sitesRepository: SitesRepository?,
+            noticesRepository: NoticesRepository?,
             preSelectedSiteId: String? = null
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(sitesRepository, preSelectedSiteId) as T
+                return HomeViewModel(sitesRepository, noticesRepository, preSelectedSiteId) as T
             }
         }
     }

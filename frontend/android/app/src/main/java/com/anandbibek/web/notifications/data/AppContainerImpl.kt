@@ -2,7 +2,7 @@ package com.anandbibek.web.notifications.data
 
 import android.content.Context
 import com.anandbibek.web.notifications.data.notices.NoticesRepository
-import com.anandbibek.web.notifications.data.notices.impl.StarredNoticesRepository
+import com.anandbibek.web.notifications.data.notices.impl.LiveNoticesRepository
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.data.sites.impl.ListedSitesRepository
 
@@ -22,7 +22,7 @@ interface AppContainer {
 class AppContainerImpl(private val applicationContext: Context) : AppContainer {
 
     override val noticesRepository: NoticesRepository by lazy {
-        StarredNoticesRepository()
+        LiveNoticesRepository()
     }
 
     override val sitesRepository: SitesRepository by lazy {

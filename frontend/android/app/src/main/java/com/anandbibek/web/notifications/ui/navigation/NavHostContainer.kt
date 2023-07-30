@@ -58,12 +58,14 @@ fun NavHostContainer(
             val homeViewModel: HomeViewModel = viewModel(
                 factory = HomeViewModel.provideFactory(
                     sitesRepository = appContainer?.sitesRepository,
+                    noticesRepository = appContainer?.noticesRepository,
                     preSelectedSiteId = navBackStackEntry.arguments?.getString(SITE_ID)
                 )
             )
 
             HomeRoute(
-                homeViewModel = homeViewModel
+                homeViewModel = homeViewModel,
+                isExpandedScreen = false // TODO
             )
         }
         composable(STARRED_ROUTE) {
