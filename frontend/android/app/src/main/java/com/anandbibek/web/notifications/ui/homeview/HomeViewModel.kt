@@ -1,5 +1,6 @@
 package com.anandbibek.web.notifications.ui.homeview
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -136,24 +137,26 @@ class HomeViewModel private constructor(
     }
 
     /* select a site */
-    fun selectSite(siteId : String) {
+    fun selectSite(context: Context, site : Site) {
         viewModelState.update {
             it.copy(
-                selectedSiteId = siteId,
+                selectedSiteId = site.id,
                 isSiteOpen = true,
                 isLoading = true
             )
         }
-        fetchNotices(siteId)
+        fetchNotices(context, site)
     }
 
-    private fun fetchNotices(siteId : String) {
-        val result = noticesRepository?.fetch()
-        viewModelState.update {
-            it.copy(
-                noticeList = result,
-                isLoading = false,
-            )
+    private fun fetchNotices(context: Context, site : Site) {
+        viewModelScope.launch {
+            val result = noticesRepository?.get(context, site)
+            viewModelState.update {
+                it.copy(
+                    noticeList = result,
+                    isLoading = false,
+                )
+            }
         }
     }
 

@@ -1,11 +1,14 @@
 package com.anandbibek.web.notifications.ui.homeview
 
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.homeview.HomeScreenType.Notices
 import com.anandbibek.web.notifications.ui.homeview.HomeScreenType.Sites
 import com.anandbibek.web.notifications.ui.homeview.HomeScreenType.SitesWithNotices
@@ -14,6 +17,7 @@ import com.anandbibek.web.notifications.ui.homeview.HomeScreenType.SitesWithNoti
 fun HomeRoute(
     homeViewModel: HomeViewModel,
     isExpandedScreen: Boolean,
+    context: Context = LocalContext.current
 ) {
 
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
@@ -21,7 +25,7 @@ fun HomeRoute(
     HomeRouteProxy(
         uiState = uiState,
         isExpandedScreen = isExpandedScreen,
-        onSelectSite = { homeViewModel.selectSite(it) },
+        onSelectSite = { homeViewModel.selectSite(context, it) },
         onRefreshSites = { homeViewModel.refreshSites() },
         onErrorDismiss = { homeViewModel.errorShown(it) },
         onSearchInputChanged = { homeViewModel.onSearchInputChanged(it) },
@@ -44,7 +48,7 @@ fun HomeRoute(
 fun HomeRouteProxy(
     uiState: HomeUiState,
     isExpandedScreen: Boolean,
-    onSelectSite: (String) -> Unit,
+    onSelectSite: (Site) -> Unit,
     onRefreshSites: () -> Unit,
     onErrorDismiss: (Long) -> Unit,
     onSearchInputChanged: (String) -> Unit,
@@ -63,8 +67,7 @@ fun HomeRouteProxy(
         }
     }
 
-    val homeScreenType = getHomeScreenType(isExpandedScreen, uiState)
-    when(homeScreenType) {
+    when(getHomeScreenType(isExpandedScreen, uiState)) {
         SitesWithNotices -> {
 
         }

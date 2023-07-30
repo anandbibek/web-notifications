@@ -41,7 +41,7 @@ import com.anandbibek.web.notifications.ui.theme.WebNotificationsTheme
 fun SiteGridHomeScreen(
     uiState: HomeUiState,
     onRefreshSites: () -> Unit,
-    onSelectSite: (String) -> Unit,
+    onSelectSite: (Site) -> Unit,
     onErrorDismiss: (Long) -> Unit,
     homeListLazyListState: LazyListState,
     siteDetailLazyListStates: Map<String, LazyListState>,
@@ -74,7 +74,7 @@ fun SiteGridHomeScreen(
 @Composable
 fun SiteGrid(
     siteList: List<Site>,
-    onSelectSite: (String) -> Unit
+    onSelectSite: (Site) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // Two items per row
@@ -90,13 +90,15 @@ fun SiteGrid(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GridItemCard(site: Site, onSelectPost: (String)
--> Unit) {
+fun GridItemCard(
+    site: Site,
+    onSelectPost: (Site) -> Unit
+) {
     ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(),
-        onClick = { onSelectPost(site.id) }
+        onClick = { onSelectPost(site) }
     ) {
         Column(
             modifier = Modifier
@@ -157,8 +159,10 @@ fun GridItemCard(site: Site, onSelectPost: (String)
 fun PreviewGridCard() {
     WebNotificationsTheme() {
         GridItemCard(
-            Site(id = "testSite", name = "TEST", description = "Description of the object",
-                icon = R.drawable.pillars, url = "https://tpsc.tripura.gov.in/"),
+            Site(
+                id = "testSite", name = "TEST", description = "Description of the object",
+                icon = R.drawable.pillars, url = "https://tpsc.tripura.gov.in/"
+            ),
             onSelectPost = { /* nothing */ }
         )
     }

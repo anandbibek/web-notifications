@@ -1,5 +1,10 @@
 package com.anandbibek.web.notifications.ui.homeview
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,8 +35,8 @@ import com.anandbibek.web.notifications.model.Notice
 import java.net.URL
 
 @Composable
-fun ListWithWebNotices(uiState: HomeUiState,) {
-    when(uiState) {
+fun ListWithWebNotices(uiState: HomeUiState) {
+    when (uiState) {
         is HomeUiState.StaticSites -> {
             when (uiState.noticeList.isNullOrEmpty()) {
 
@@ -85,39 +90,49 @@ fun NoticeList(notices: List<Notice>) {
 @Composable
 fun WebNoticeItemCard(notice: Notice) {
 
-        Box(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = notice.title,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = notice.data,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = notice.time,
-                        style = MaterialTheme.typography.labelSmall
-                    )
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                _ -> // Callback when the activity is closed, if required
+        }
+
+    Box(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(notice.url.toString()))
+                    launcher.launch(intent)
                 }
-                Icon(
-                    imageVector = if (notice.isStarred) Icons.Filled.Star else Icons.Default.Star,
-                    contentDescription = null,
-                    tint = if (notice.isStarred) MaterialTheme.colorScheme.primary else Color.Gray,
-                    modifier = Modifier.size(24.dp)
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = notice.title,
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = notice.data,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = notice.time,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
+            Icon(
+                imageVector = if (notice.isStarred) Icons.Filled.Star else Icons.Default.Star,
+                contentDescription = null,
+                tint = if (notice.isStarred) MaterialTheme.colorScheme.primary else Color.Gray,
+                modifier = Modifier.size(12.dp)
+            )
         }
+    }
 
 }
 
