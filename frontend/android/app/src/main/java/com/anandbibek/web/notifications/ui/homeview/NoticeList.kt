@@ -2,12 +2,13 @@ package com.anandbibek.web.notifications.ui.homeview
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,13 +31,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Notice
+import com.anandbibek.web.notifications.ui.widgets.TimeAgoFormatted
 import java.net.URL
 
 @Composable
 fun ListWithWebNotices(uiState: HomeUiState) {
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ -> // Callback when the activity is closed, if required
+        }
+
     when (uiState) {
         is HomeUiState.StaticSites -> {
             when (uiState.noticeList.isNullOrEmpty()) {
@@ -45,7 +53,7 @@ fun ListWithWebNotices(uiState: HomeUiState) {
                 }
 
                 false -> {
-                    NoticeList(notices = uiState.noticeList)
+                    NoticeList(notices = uiState.noticeList, launcher)
                 }
             }
         }
@@ -73,31 +81,42 @@ fun EmptyPlaceholder(uiState: HomeUiState) {
 }
 
 @Composable
-fun NoticeList(notices: List<Notice>) {
+fun NoticeList(
+    notices: List<Notice>,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
+) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
 
-        items(notices.size) { index ->
-            val webNotice = notices[index]
-            WebNoticeItemCard(webNotice)
-        }
+        items(
+            count = notices.size,
+            key = { notices[it].id },
+            itemContent =
+            { index ->
+                WebNoticeItemCard(notices[index], launcher)
+
+                // Add a divider after each item except for the last one
+                if (index < notices.size - 1) {
+                    Divider(
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f),
+                        thickness = Dp.Hairline,
+                    )
+                }
+            }
+        )
 
     }
 }
 
 @Composable
-fun WebNoticeItemCard(notice: Notice) {
+fun WebNoticeItemCard(
+    notice: Notice,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
+) {
 
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                _ -> // Callback when the activity is closed, if required
-        }
 
-    Box(
-        modifier = Modifier.padding(16.dp)
-    ) {
+    Box {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -106,23 +125,25 @@ fun WebNoticeItemCard(notice: Notice) {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(notice.url.toString()))
                     launcher.launch(intent)
                 }
+                .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
+                TimeAgoFormatted(
+                    time = notice.time,
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = notice.title,
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.bodySmall
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = notice.data,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = notice.time,
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
             Icon(
@@ -139,22 +160,26 @@ fun WebNoticeItemCard(notice: Notice) {
 @Preview
 @Composable
 fun PreviewListWithWebNotices() {
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
     val notices = listOf(
         Notice(
+            id = 1,
             title = "Web Notice 1",
             data = "Data for Web Notice 1",
             url = URL("https://example.com/webnotice1"),
-            time = "2 mins ago",
+            time = 44,
             isStarred = true
         ),
         Notice(
+            id = 2,
             title = "Web Notice 2",
             data = "Data for Web Notice 2",
             url = URL("https://example.com/webnotice2"),
-            time = "1 month ago",
+            time = 4444444444,
             isStarred = false
         ),
         // Add more WebNotice items here as needed
     )
-    NoticeList(notices = notices)
+    NoticeList(notices = notices, launcher)
 }

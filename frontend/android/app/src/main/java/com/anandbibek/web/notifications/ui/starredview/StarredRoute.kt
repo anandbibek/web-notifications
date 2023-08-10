@@ -7,9 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun StarredRoute(viewModel: StarredViewModel) {
+fun StarredRoute(
+    viewModel: StarredViewModel = viewModel(),
+    isExpandedScreen: Boolean
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

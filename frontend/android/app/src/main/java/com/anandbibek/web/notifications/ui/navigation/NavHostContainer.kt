@@ -36,7 +36,7 @@ const val SITE_ID = "siteId"
 
 @Composable
 fun NavHostContainer(
-    appContainer: AppContainer?,
+    appContainer: AppContainer,
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = HOME_ROUTE,
@@ -57,9 +57,9 @@ fun NavHostContainer(
         ) { navBackStackEntry ->
             val homeViewModel: HomeViewModel = viewModel(
                 factory = HomeViewModel.provideFactory(
-                    sitesRepository = appContainer?.sitesRepository,
-                    noticesRepository = appContainer?.noticesRepository,
-                    preSelectedSiteId = navBackStackEntry.arguments?.getString(SITE_ID)
+                    sitesRepository = appContainer.staticSitesRepository,
+                    noticesRepository = appContainer.liveNoticesRepository,
+                    //preSelectedSiteId = navBackStackEntry.arguments?.getString(SITE_ID)
                 )
             )
 
@@ -69,11 +69,9 @@ fun NavHostContainer(
             )
         }
         composable(STARRED_ROUTE) {
-            val starredViewModel: StarredViewModel = viewModel(
-                factory = StarredViewModel.provideFactory(appContainer?.noticesRepository)
-            )
+            val starredViewModel: StarredViewModel = viewModel()
             StarredRoute(
-                viewModel = starredViewModel
+                isExpandedScreen = false // TODO
             )
         }
     }

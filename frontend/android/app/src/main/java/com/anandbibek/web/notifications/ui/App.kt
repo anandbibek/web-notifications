@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +21,7 @@ import com.anandbibek.web.notifications.ui.theme.WebNotificationsTheme
 
 
 @Composable
-fun NotificationsApp(appContainer: AppContainer?) {
+fun NotificationsApp(appContainer: AppContainer) {
     WebNotificationsTheme {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -66,11 +65,11 @@ fun NotificationsApp(appContainer: AppContainer?) {
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun PreviewNavBar() {
     WebNotificationsTheme {
-        NotificationsApp(appContainer = null)
+        NotificationsApp()
     }
-}
+}*/
 

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * UI state for the Home route.
@@ -51,7 +52,7 @@ sealed interface HomeUiState {
 private data class HomeViewModelState(
     val siteList: List<Site>? = null,
     val noticeList: List<Notice>? = null,
-    val selectedSiteId: String?,
+    val selectedSiteId: String? = null,
     val isLoading: Boolean = false,
     val errorMessages: List<ErrorMessage> = emptyList(),
     val searchInput: String = "",
@@ -88,17 +89,14 @@ private data class HomeViewModelState(
 /**
  * ViewModel that handles the business logic of the Home screen
  */
-class HomeViewModel private constructor(
-    private val sitesRepository: SitesRepository?,
-    private val noticesRepository: NoticesRepository?,
-    preSelectedSiteId: String?
+class HomeViewModel @Inject constructor(
+    private val sitesRepository: SitesRepository,
+    private val noticesRepository: NoticesRepository
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(
         HomeViewModelState(
-            isLoading = true,
-            selectedSiteId = preSelectedSiteId,
-            isSiteOpen = preSelectedSiteId != null
+            isLoading = true
         )
     )
 
@@ -123,7 +121,7 @@ class HomeViewModel private constructor(
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val result = sitesRepository?.getSites()
+            val result = sitesRepository.getSites()
             viewModelState.update {
                 it.copy(siteList = result, isLoading = false)
             }
@@ -150,7 +148,7 @@ class HomeViewModel private constructor(
 
     private fun fetchNotices(context: Context, site : Site) {
         viewModelScope.launch {
-            val result = noticesRepository?.get(context, site)
+            val result = noticesRepository.get(context, site)
             viewModelState.update {
                 it.copy(
                     noticeList = result,
@@ -182,12 +180,11 @@ class HomeViewModel private constructor(
     // factory for view model
     companion object {
         fun provideFactory(
-            sitesRepository: SitesRepository?,
-            noticesRepository: NoticesRepository?,
-            preSelectedSiteId: String? = null
+            sitesRepository: SitesRepository,
+            noticesRepository: NoticesRepository
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(sitesRepository, noticesRepository, preSelectedSiteId) as T
+                return HomeViewModel(sitesRepository, noticesRepository) as T
             }
         }
     }

@@ -19,7 +19,6 @@ fun HomeRoute(
     isExpandedScreen: Boolean,
     context: Context = LocalContext.current
 ) {
-
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     HomeRouteProxy(

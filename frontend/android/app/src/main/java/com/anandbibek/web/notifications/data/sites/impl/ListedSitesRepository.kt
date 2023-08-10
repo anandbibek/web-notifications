@@ -6,7 +6,7 @@ import com.anandbibek.web.notifications.model.Site
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ListedSitesRepository : SitesRepository{
+class ListedSitesRepository : SitesRepository {
     override suspend fun getSites(): List<Site> {
         return withContext(Dispatchers.IO) {
             siteList
