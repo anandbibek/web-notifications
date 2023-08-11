@@ -37,7 +37,7 @@ sealed interface HomeUiState {
 
     data class StaticSites(
         val siteList: List<Site>,
-        val noticeList: List<Notice>?,
+        val noticeList: List<Notice>,
         val selectedSite: Site?,
         val isSiteOpen : Boolean,
         override val isLoading: Boolean,
@@ -51,7 +51,7 @@ sealed interface HomeUiState {
  */
 private data class HomeViewModelState(
     val siteList: List<Site>? = null,
-    val noticeList: List<Notice>? = null,
+    val noticeList: List<Notice> = listOf(),
     val selectedSiteId: String? = null,
     val isLoading: Boolean = false,
     val errorMessages: List<ErrorMessage> = emptyList(),

@@ -4,8 +4,9 @@ import android.content.Context
 import android.util.Log
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.File
-import java.io.ObjectOutputStream
 
 
 interface NoticesRepository {
@@ -19,7 +20,7 @@ interface NoticesRepository {
     fun getRepoName(site: Site): String
 
     fun getPersistenceFilename(site: Site): String {
-        return getRepoName(site) + ".notices"
+        return getRepoName(site) + ".notices.json"
     }
 
     fun persist(context: Context, site: Site, data: List<Notice>) {
@@ -27,10 +28,9 @@ interface NoticesRepository {
                 // Create a file in the private directory to store the data
                 val file = File(context.filesDir, getPersistenceFilename(site))
 
-                // Write the data to the file using ObjectOutputStream
-                ObjectOutputStream(file.outputStream()).use { outputStream ->
-                    outputStream.writeObject(data)
-                }
+                // Write the data to the file
+                file.writeText(Json.encodeToString(data))
+
             } catch (e: Exception) {
                 Log.e(TAG, "Persist failed for " + site.id, e)
             }

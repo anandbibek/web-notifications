@@ -84,7 +84,10 @@ fun HomeRouteProxy(
         }
 
         Notices -> {
-            ListWithWebNotices(uiState = uiState)
+            ListWithWebNotices(
+                uiState = uiState as HomeUiState.StaticSites,
+                onSelectSite = onSelectSite,
+                )
         }
     }
 

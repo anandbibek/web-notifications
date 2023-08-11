@@ -1,12 +1,13 @@
 package com.anandbibek.web.notifications.model
 
-import java.net.URL
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Notice(
     val id: Int,
     val title: String,
     val data: String,
-    val url: URL,
+    val url: String,
     val time: Long,
     var isStarred: Boolean = false
 )

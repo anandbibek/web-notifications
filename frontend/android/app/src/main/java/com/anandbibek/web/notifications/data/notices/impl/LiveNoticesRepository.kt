@@ -4,9 +4,8 @@ import com.anandbibek.web.notifications.data.notices.NoticesRepository
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
-import java.net.URL
 import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
@@ -19,11 +18,11 @@ import javax.net.ssl.X509TrustManager
 
 class LiveNoticesRepository : NoticesRepository {
 
-    override suspend fun fetchOnline(site: Site): List<Notice> = runBlocking(Dispatchers.IO) {
+    override suspend fun fetchOnline(site: Site): List<Notice> = withContext(Dispatchers.IO) {
         val doc = Jsoup.connect(site.url)
             .userAgent("Mozilla")
             .ignoreHttpErrors(true)
-            .timeout(5000)
+            .timeout(15000)
             .sslSocketFactory(socketFactory())
             .get();
 
@@ -40,21 +39,10 @@ class LiveNoticesRepository : NoticesRepository {
             val data = link.substringAfterLast("/")
             val text = linkElement?.text()?.trim() ?: ""
             val time = System.currentTimeMillis();
-            Notice(index++, text, data, URL(link), time)
+            Notice(index++, text, data, link, time)
         }
 
         notices ?: emptyList()
-
-        /*listOf(
-            Notice(
-                data = "data",
-                isStarred = false,
-                time = "today",
-                title = "A big notice",
-                url
-                = URL("https://google.com")
-            )
-        )*/
     }
 
     override fun getRepoName(site: Site): String {

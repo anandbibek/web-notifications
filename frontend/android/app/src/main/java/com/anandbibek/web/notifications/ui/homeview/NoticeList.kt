@@ -17,8 +17,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,38 +34,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Notice
+import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.widgets.TimeAgoFormatted
-import java.net.URL
 
 @Composable
-fun ListWithWebNotices(uiState: HomeUiState) {
+fun ListWithWebNotices(
+    uiState: HomeUiState.StaticSites,
+    onSelectSite: (Site) -> Unit
+) {
     val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ -> // Callback when the activity is closed, if required
-        }
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+    NoticeList(uiState, launcher, uiState.isLoading, onSelectSite)
 
-    when (uiState) {
-        is HomeUiState.StaticSites -> {
-            when (uiState.noticeList.isNullOrEmpty()) {
 
-                true -> {
-                    EmptyPlaceholder(uiState)
-                }
-
-                false -> {
-                    NoticeList(notices = uiState.noticeList, launcher)
-                }
-            }
-        }
-
-        else -> {
-            EmptyPlaceholder(uiState)
-        }
-    }
 }
 
 @Composable
@@ -80,33 +69,54 @@ fun EmptyPlaceholder(uiState: HomeUiState) {
     }
 }
 
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoticeList(
-    notices: List<Notice>,
-    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
+    uiState: HomeUiState.StaticSites,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>,
+    loading: Boolean,
+    onSelectSite: (Site) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
+
+
+    val pullRefreshState = rememberPullRefreshState(loading, {
+        uiState.selectedSite?.let {
+            onSelectSite(
+                it
+            )
+        }
+    })
+    Box(
+        Modifier.pullRefresh(pullRefreshState)
     ) {
 
-        items(
-            count = notices.size,
-            key = { notices[it].id },
-            itemContent =
-            { index ->
-                WebNoticeItemCard(notices[index], launcher)
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
 
-                // Add a divider after each item except for the last one
-                if (index < notices.size - 1) {
-                    Divider(
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f),
-                        thickness = Dp.Hairline,
-                    )
+            items(
+                count = uiState.noticeList.size,
+                key = { uiState.noticeList[it].id },
+                itemContent =
+                { index ->
+                    WebNoticeItemCard(uiState.noticeList[index], launcher)
+
+                    // Add a divider after each item except for the last one
+                    if (index < uiState.noticeList.size - 1) {
+                        Divider(
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f),
+                            thickness = Dp.Hairline,
+                        )
+                    }
                 }
-            }
-        )
+            )
+
+        }
+        PullRefreshIndicator(loading, pullRefreshState, Modifier.align(Alignment.TopCenter))
 
     }
+
 }
 
 @Composable
@@ -122,7 +132,7 @@ fun WebNoticeItemCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(notice.url.toString()))
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(notice.url))
                     launcher.launch(intent)
                 }
                 .padding(16.dp)
@@ -157,6 +167,8 @@ fun WebNoticeItemCard(
 
 }
 
+/*
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun PreviewListWithWebNotices() {
@@ -181,5 +193,5 @@ fun PreviewListWithWebNotices() {
         ),
         // Add more WebNotice items here as needed
     )
-    NoticeList(notices = notices, launcher)
-}
+    NoticeList(notices = notices, launcher, false)
+}*/
