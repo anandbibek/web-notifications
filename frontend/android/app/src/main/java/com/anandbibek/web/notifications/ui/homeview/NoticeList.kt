@@ -6,7 +6,10 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,39 +22,163 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.widgets.TimeAgoFormatted
 
 @Composable
 fun ListWithWebNotices(
-    uiState: HomeUiState.StaticSites,
-    onSelectSite: (Site) -> Unit
+    uiState: HomeUiState.StaticSites, onSelectSite: (Site) -> Unit
 ) {
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-        uiState.selectedSite?.let {
-            NoticeList(uiState, launcher, it, onSelectSite)
+
+    var isSearchOpen by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+    uiState.selectedSite?.let {
+        Column {
+            if (isSearchOpen) {
+                SearchBox(
+                    searchQuery = searchQuery,
+                    onSearchQueryChanged = { searchQuery = it},
+                    onSearchClose = {
+                        searchQuery = ""
+                        isSearchOpen = false
+                    })
+            } else {
+                HeaderBox(site = it, onSearchOpen = { isSearchOpen = true })
+            }
+            NoticeList(uiState, launcher, it, onSelectSite, searchQuery)
+        }
+    }
+
+
+}
+
+@Composable
+fun HeaderBox(
+    site: Site, onSearchOpen: () -> Unit
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween
+
+    ) {
+        if (site.icon != null) {
+            Image(
+                painter = painterResource(id = site.icon),
+                contentDescription = site.name,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .height(58.dp),
+                colorFilter = ColorFilter.tint(
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            )
         }
 
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = site.name,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 4.dp),
+                maxLines = 1
+            )
 
+            Text(
+                text = site.description,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 4,
+                fontWeight = FontWeight.Light
+            )
+        }
 
+        IconButton(
+            onClick = onSearchOpen,
+            modifier = Modifier
+                .size(48.dp)
+                .align(Alignment.CenterVertically)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+
+    }
+}
+
+@Composable
+fun SearchBox(
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit,
+    onSearchClose: () -> Unit
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween
+
+    ) {
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { newQuery ->
+                onSearchQueryChanged(newQuery)
+            },
+
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search, contentDescription = "Localized description"
+                )
+            },
+            trailingIcon = {
+                IconButton(onClick = onSearchClose) {
+                    Icon(
+                        Icons.Default.Close, contentDescription = "Clear"
+                    )
+                }
+            },
+            placeholder = { Text(text = "Search") },
+            singleLine = true,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp)
+        )
+    }
 }
 
 
@@ -61,16 +188,22 @@ fun NoticeList(
     uiState: HomeUiState.StaticSites,
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>,
     selectedSite: Site,
-    onSelectSite: (Site) -> Unit
+    onSelectSite: (Site) -> Unit,
+    searchQuery: String
 ) {
 
     //var refreshing by remember { mutableStateOf(uiState.isLoading) }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.isLoading,
-        onRefresh = { onSelectSite(selectedSite)})
+        onRefresh = { onSelectSite(selectedSite) })
 
     //val noticesFlow = onRefreshNotices(selectedSite)
     val noticeList by uiState.noticeList.collectAsState(initial = emptyList())
+    val filteredList = noticeList.filter {
+        notice -> searchQuery.isEmpty()
+            || notice.title.contains(searchQuery, ignoreCase = true)
+            || notice.data.contains(searchQuery, ignoreCase = true)
+    }
 
     Box(
         Modifier.pullRefresh(pullRefreshState)
@@ -80,25 +213,22 @@ fun NoticeList(
             modifier = Modifier.fillMaxSize()
         ) {
 
-            items(
-                count = noticeList.size,
-                key = { noticeList[it].id },
-                itemContent =
-                { index ->
-                    WebNoticeItemCard(noticeList[index], launcher)
+            items(count = filteredList.size, key = { filteredList[it].id }, itemContent = { index ->
+                WebNoticeItemCard(filteredList[index], launcher)
 
-                    // Add a divider after each item except for the last one
-                    if (index < noticeList.size - 1) {
-                        Divider(
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f),
-                            thickness = Dp.Hairline,
-                        )
-                    }
+                // Add a divider after each item except for the last one
+                if (index < filteredList.size - 1) {
+                    Divider(
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f),
+                        thickness = Dp.Hairline,
+                    )
                 }
-            )
+            })
 
         }
-        PullRefreshIndicator(uiState.isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter))
+        PullRefreshIndicator(
+            uiState.isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter)
+        )
 
     }
 
@@ -106,22 +236,19 @@ fun NoticeList(
 
 @Composable
 fun WebNoticeItemCard(
-    notice: Notice,
-    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
+    notice: Notice, launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
 
 
     Box {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Row(verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(notice.url))
                     launcher.launch(intent)
                 }
-                .padding(16.dp)
-        ) {
+                .padding(16.dp)) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -132,8 +259,7 @@ fun WebNoticeItemCard(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = notice.title,
-                    style = MaterialTheme.typography.bodySmall
+                    text = notice.title, style = MaterialTheme.typography.bodySmall
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -151,6 +277,26 @@ fun WebNoticeItemCard(
         }
     }
 
+}
+
+@Preview
+@Composable
+fun PreviewHeaderBox() {
+    HeaderBox(site = Site(
+        id = "testSite",
+        name = "TEST",
+        description = "Description of the object",
+        icon = R.drawable.pillars,
+        url = "https://tpsc.tripura.gov.in/"
+    ), onSearchOpen = {})
+}
+
+@Preview
+@Composable
+fun PreviewSearchBox() {
+    SearchBox(searchQuery = "", onSearchQueryChanged = {}) {
+
+    }
 }
 
 /*

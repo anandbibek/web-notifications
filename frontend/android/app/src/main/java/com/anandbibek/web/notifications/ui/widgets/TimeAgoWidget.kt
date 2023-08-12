@@ -43,15 +43,15 @@ fun getTimeAgoFormatted(timeInMillis: Long, prefixText: String): String {
     val currentTimeMillis = System.currentTimeMillis()
     val timeDiffMillis = currentTimeMillis - timeInMillis
 
-    val seconds = TimeUnit.MILLISECONDS.toSeconds(timeDiffMillis)
+    //val seconds = TimeUnit.MILLISECONDS.toSeconds(timeDiffMillis)
     val minutes = TimeUnit.MILLISECONDS.toMinutes(timeDiffMillis)
     val hours = TimeUnit.MILLISECONDS.toHours(timeDiffMillis)
     val days = TimeUnit.MILLISECONDS.toDays(timeDiffMillis)
 
     return prefixText + when {
-        days >= 1 -> "$days days ago"
-        hours >= 1 -> "$hours hours ago"
-        minutes >= 1 -> "$minutes minutes ago"
+        days >= 1 -> "$hours day${if (days > 1) "s" else ""} ago"
+        hours >= 1 -> "$hours hour${if (hours > 1) "s" else ""} ago"
+        minutes >= 1 -> "$minutes minute${if (minutes > 1) "s" else ""} ago"
         else -> "Now"
     }
 }
