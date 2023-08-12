@@ -63,6 +63,9 @@ fun NavHostContainer(
                 )
             )
 
+            // FIXME BUGGED
+            /*val homeViewModel: HomeViewModel = viewModel();*/
+
             HomeRoute(
                 homeViewModel = homeViewModel,
                 isExpandedScreen = false // TODO

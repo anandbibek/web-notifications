@@ -9,8 +9,11 @@ import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.model.ErrorMessage
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -37,7 +40,7 @@ sealed interface HomeUiState {
 
     data class StaticSites(
         val siteList: List<Site>,
-        val noticeList: List<Notice>,
+        val noticeList: Flow<List<Notice>>,
         val selectedSite: Site?,
         val isSiteOpen : Boolean,
         override val isLoading: Boolean,
@@ -51,7 +54,7 @@ sealed interface HomeUiState {
  */
 private data class HomeViewModelState(
     val siteList: List<Site>? = null,
-    val noticeList: List<Notice> = listOf(),
+    val noticeList: Flow<List<Notice>> = flowOf(emptyList()),
     val selectedSiteId: String? = null,
     val isLoading: Boolean = false,
     val errorMessages: List<ErrorMessage> = emptyList(),
@@ -89,6 +92,7 @@ private data class HomeViewModelState(
 /**
  * ViewModel that handles the business logic of the Home screen
  */
+@HiltViewModel
 class HomeViewModel @Inject constructor(
     private val sitesRepository: SitesRepository,
     private val noticesRepository: NoticesRepository
@@ -139,8 +143,7 @@ class HomeViewModel @Inject constructor(
         viewModelState.update {
             it.copy(
                 selectedSiteId = site.id,
-                isSiteOpen = true,
-                isLoading = true
+                isSiteOpen = true
             )
         }
         fetchNotices(context, site)
@@ -148,14 +151,21 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchNotices(context: Context, site : Site) {
         viewModelScope.launch {
-            val result = noticesRepository.get(context, site)
+            val result = noticesRepository.get(
+                context, site,
+                onLoadStart = {setLoading(true)},
+                onLoadComplete = {setLoading(false)})
+
             viewModelState.update {
                 it.copy(
-                    noticeList = result,
-                    isLoading = false,
+                    noticeList = result
                 )
             }
         }
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        viewModelState.update { it.copy(isLoading = isLoading) }
     }
 
     /**

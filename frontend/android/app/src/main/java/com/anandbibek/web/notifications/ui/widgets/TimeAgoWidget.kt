@@ -14,9 +14,10 @@ import java.util.concurrent.TimeUnit
 fun TimeAgoFormatted(
     time: Long,
     modifier: Modifier = Modifier,
-    style: TextStyle
+    style: TextStyle,
+    prefixText: String = "",
 ) {
-    val timeAgo = getTimeAgoFormatted(time)
+    val timeAgo = getTimeAgoFormatted(time, prefixText)
 
     Text(
         text = timeAgo,
@@ -38,7 +39,7 @@ fun TimeAgoFormattedPreview() {
     }
 }
 
-fun getTimeAgoFormatted(timeInMillis: Long): String {
+fun getTimeAgoFormatted(timeInMillis: Long, prefixText: String): String {
     val currentTimeMillis = System.currentTimeMillis()
     val timeDiffMillis = currentTimeMillis - timeInMillis
 
@@ -47,7 +48,7 @@ fun getTimeAgoFormatted(timeInMillis: Long): String {
     val hours = TimeUnit.MILLISECONDS.toHours(timeDiffMillis)
     val days = TimeUnit.MILLISECONDS.toDays(timeDiffMillis)
 
-    return when {
+    return prefixText + when {
         days >= 1 -> "$days days ago"
         hours >= 1 -> "$hours hours ago"
         minutes >= 1 -> "$minutes minutes ago"

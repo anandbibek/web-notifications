@@ -27,16 +27,14 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.widgets.TimeAgoFormatted
@@ -48,25 +46,12 @@ fun ListWithWebNotices(
 ) {
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-    NoticeList(uiState, launcher, uiState.isLoading, onSelectSite)
+        uiState.selectedSite?.let {
+            NoticeList(uiState, launcher, it, onSelectSite)
+        }
 
 
-}
 
-@Composable
-fun EmptyPlaceholder(uiState: HomeUiState) {
-// if there are no posts, and no error, let the user refresh manually
-    TextButton(
-        modifier = Modifier.fillMaxSize(),
-        onClick = {}
-    ) {
-        val msg = stringResource(id = R.string.site_load_failed) + uiState
-            .errorMessages.joinToString(". ")
-        Text(
-            text = msg,
-            textAlign = TextAlign.Center
-        )
-    }
 }
 
 
@@ -75,18 +60,18 @@ fun EmptyPlaceholder(uiState: HomeUiState) {
 fun NoticeList(
     uiState: HomeUiState.StaticSites,
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>,
-    loading: Boolean,
+    selectedSite: Site,
     onSelectSite: (Site) -> Unit
 ) {
 
+    //var refreshing by remember { mutableStateOf(uiState.isLoading) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = uiState.isLoading,
+        onRefresh = { onSelectSite(selectedSite)})
 
-    val pullRefreshState = rememberPullRefreshState(loading, {
-        uiState.selectedSite?.let {
-            onSelectSite(
-                it
-            )
-        }
-    })
+    //val noticesFlow = onRefreshNotices(selectedSite)
+    val noticeList by uiState.noticeList.collectAsState(initial = emptyList())
+
     Box(
         Modifier.pullRefresh(pullRefreshState)
     ) {
@@ -96,14 +81,14 @@ fun NoticeList(
         ) {
 
             items(
-                count = uiState.noticeList.size,
-                key = { uiState.noticeList[it].id },
+                count = noticeList.size,
+                key = { noticeList[it].id },
                 itemContent =
                 { index ->
-                    WebNoticeItemCard(uiState.noticeList[index], launcher)
+                    WebNoticeItemCard(noticeList[index], launcher)
 
                     // Add a divider after each item except for the last one
-                    if (index < uiState.noticeList.size - 1) {
+                    if (index < noticeList.size - 1) {
                         Divider(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f),
                             thickness = Dp.Hairline,
@@ -113,7 +98,7 @@ fun NoticeList(
             )
 
         }
-        PullRefreshIndicator(loading, pullRefreshState, Modifier.align(Alignment.TopCenter))
+        PullRefreshIndicator(uiState.isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter))
 
     }
 
@@ -142,7 +127,8 @@ fun WebNoticeItemCard(
             ) {
                 TimeAgoFormatted(
                     time = notice.time,
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
+                    prefixText = "Updated "
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
