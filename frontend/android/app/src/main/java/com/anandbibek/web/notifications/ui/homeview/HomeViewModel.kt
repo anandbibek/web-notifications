@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.anandbibek.web.notifications.data.notices.NoticesRepositoryFactory
+import com.anandbibek.web.notifications.data.notices.impl.LiveNoticesRepository
+import com.anandbibek.web.notifications.data.parser.ParserFactory
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.model.ErrorMessage
 import com.anandbibek.web.notifications.model.Notice
@@ -92,7 +93,8 @@ private data class HomeViewModelState(
  */
 class HomeViewModel constructor(
     private val sitesRepository: SitesRepository,
-    private val noticesRepositoryFactory: NoticesRepositoryFactory
+    private val liveNoticesRepository: LiveNoticesRepository,
+    private val parserFactory: ParserFactory
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(
@@ -148,8 +150,8 @@ class HomeViewModel constructor(
 
     private fun fetchNotices(context: Context, site: Site) {
         viewModelScope.launch {
-            val result = noticesRepositoryFactory.getNoticesRepository(site)
-                .get(context, site,
+            val result = liveNoticesRepository
+                .get(context, site, parserFactory,
                     onLoadStart = { setLoading(true) },
                     onLoadComplete = { setLoading(false) })
 
@@ -188,10 +190,11 @@ class HomeViewModel constructor(
     companion object {
         fun provideFactory(
             sitesRepository: SitesRepository,
-            noticesRepositoryFactory: NoticesRepositoryFactory
+            liveNoticesRepository: LiveNoticesRepository,
+            parserFactory: ParserFactory
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(sitesRepository, noticesRepositoryFactory) as T
+                return HomeViewModel(sitesRepository, liveNoticesRepository, parserFactory) as T
             }
         }
     }

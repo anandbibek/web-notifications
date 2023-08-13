@@ -2,6 +2,7 @@ package com.anandbibek.web.notifications.data.notices
 
 import android.content.Context
 import android.util.Log
+import com.anandbibek.web.notifications.data.parser.ParserFactory
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ interface NoticesRepository {
     }
 
     /* fetch list of notices */
-    suspend fun fetchOnline(site: Site): List<Notice>
+    suspend fun fetchOnline(site: Site, parserFactory: ParserFactory): List<Notice>
     fun getRepoName(site: Site): String
 
     fun getPersistenceFilename(site: Site): String {
@@ -56,15 +57,13 @@ interface NoticesRepository {
         }
     }
 
-    /*suspend fun get(context: Context, site: Site): List<Notice> {
-
-        var notices = fetchOffline(context, site)
-        notices = fetchOnline(site)
-        persistOffline(context, site, notices)
-        return notices
-    }*/
-
-    fun get(context: Context, site: Site, onLoadStart: () -> Unit, onLoadComplete: () -> Unit):
+    fun get(
+        context: Context,
+        site: Site,
+        parserFactory: ParserFactory,
+        onLoadStart: () -> Unit,
+        onLoadComplete: () -> Unit
+    ):
             Flow<List<Notice>> = flow {
         // Load offline data first
         val offlineNotices = fetchOffline(context, site)
@@ -72,7 +71,7 @@ interface NoticesRepository {
 
         // Load online data and emit if available
         onLoadStart()
-        val onlineNotices = fetchOnline(site)
+        val onlineNotices = fetchOnline(site, parserFactory)
 
         if (onlineNotices.isNotEmpty()) {
             emit(onlineNotices)

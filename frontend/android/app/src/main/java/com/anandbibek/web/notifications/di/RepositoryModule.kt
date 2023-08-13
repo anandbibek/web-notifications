@@ -1,8 +1,9 @@
 package com.anandbibek.web.notifications.di
 
-import com.anandbibek.web.notifications.data.notices.impl.site.EmptyRepo
-import com.anandbibek.web.notifications.data.notices.impl.site.TPSCRepo
-import com.anandbibek.web.notifications.data.notices.impl.site.TripuraUniversityRepo
+import com.anandbibek.web.notifications.data.notices.impl.LiveNoticesRepository
+import com.anandbibek.web.notifications.data.parser.NoParser
+import com.anandbibek.web.notifications.data.parser.site.TPSCParser
+import com.anandbibek.web.notifications.data.parser.site.TripuraUniversityParser
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.data.sites.impl.ListedSitesRepository
 import dagger.Module
@@ -21,6 +22,12 @@ object RepositoryModule {
         return ListedSitesRepository()
     }
 
+    @Singleton
+    @Provides
+    fun liveNoticesRepository() : LiveNoticesRepository {
+        return LiveNoticesRepository()
+    }
+
 /*    @Singleton
     @Provides
     fun provideNoticesRepositoryFactory() : NoticesRepositoryFactory {
@@ -29,19 +36,19 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideTPSCRepo() : TPSCRepo {
-        return TPSCRepo()
+    fun provideTPSCParser() : TPSCParser {
+        return TPSCParser()
     }
 
     @Singleton
     @Provides
-    fun provideTripuraUniversityRepo() : TripuraUniversityRepo {
-        return TripuraUniversityRepo()
+    fun provideTripuraUniversityParser() : TripuraUniversityParser {
+        return TripuraUniversityParser()
     }
 
     @Singleton
     @Provides
-    fun provideEmptyRepo() : EmptyRepo {
-        return EmptyRepo()
+    fun provideNoParser() : NoParser {
+        return NoParser()
     }
 }

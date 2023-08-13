@@ -51,7 +51,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Notice
+import com.anandbibek.web.notifications.model.Page
 import com.anandbibek.web.notifications.model.Site
+import com.anandbibek.web.notifications.ui.widgets.TabScreen
 import com.anandbibek.web.notifications.ui.widgets.TimeAgoFormatted
 
 @Composable
@@ -63,9 +65,17 @@ fun ListWithWebNotices(
 
     var isSearchOpen by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
+    var tabIndex by remember { mutableStateOf(0) }
+    //val tabs = listOf("Home", "About", "Settings", "More", "Something", "Everything")
+
     uiState.selectedSite?.let {
         Column {
-            if (isSearchOpen) {
+            //AnimatedVisibility (
+            if(
+                isSearchOpen
+                //enter = fadeIn() + expandHorizontally(),
+                //exit = fadeOut() + shrinkHorizontally()
+            ) {
                 SearchBox(
                     searchQuery = searchQuery,
                     onSearchQueryChanged = { searchQuery = it},
@@ -73,9 +83,12 @@ fun ListWithWebNotices(
                         searchQuery = ""
                         isSearchOpen = false
                     })
-            } else {
+            }
+            if (!isSearchOpen)  {
                 HeaderBox(site = it, onSearchOpen = { isSearchOpen = true })
             }
+            TabScreen(tabs = it.pages.map { it.name }, tabIndex = tabIndex, onTabChange = { tabIndex =
+                it })
             NoticeList(uiState, launcher, it, onSelectSite, searchQuery)
         }
     }
@@ -288,7 +301,10 @@ fun PreviewHeaderBox() {
         description = "Description of the object",
         icon = R.drawable.pillars,
         url = "https://tpsc.tripura.gov.in/",
-        parser = "test"
+        parser = "test",
+        pages = listOf(
+            Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parser = "tpsc")
+        )
     ), onSearchOpen = {})
 }
 

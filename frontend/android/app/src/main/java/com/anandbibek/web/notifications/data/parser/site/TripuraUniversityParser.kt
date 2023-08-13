@@ -1,10 +1,10 @@
-package com.anandbibek.web.notifications.data.notices.impl.site
+package com.anandbibek.web.notifications.data.parser.site
 
-import com.anandbibek.web.notifications.data.notices.impl.LiveNoticesRepository
+import com.anandbibek.web.notifications.data.parser.BaseParser
 import com.anandbibek.web.notifications.model.Notice
 import org.jsoup.nodes.Document
 
-class TripuraUniversityRepo : LiveNoticesRepository() {
+class TripuraUniversityParser : BaseParser() {
 
     override fun process(doc: Document): List<Notice> {
         // Select the <table> element with id "TblNotification"
