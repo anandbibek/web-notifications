@@ -161,7 +161,7 @@ fun PreviewGridCard() {
         GridItemCard(
             Site(
                 id = "testSite", name = "TEST", description = "Description of the object",
-                icon = R.drawable.pillars, url = "https://tpsc.tripura.gov.in/"
+                icon = R.drawable.pillars, url = "https://tpsc.tripura.gov.in/", parser = "test"
             ),
             onSelectPost = { /* nothing */ }
         )

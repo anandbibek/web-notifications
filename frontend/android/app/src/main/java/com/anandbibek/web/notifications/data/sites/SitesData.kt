@@ -8,19 +8,16 @@ val siteList = listOf(
         name = "TPSC (Tripura)",
         description = "Tripura Public Services Commission",
         icon = R.drawable.pillars,
-        url = "https://tpsc.tripura.gov.in/"
+        url = "https://tpsc.tripura.gov.in/",
+        parser = "tpsc"
     ),
     Site(
-        id = "itm2",
-        name = "Item 2",
-        description = "Description for Item 2",
-        url = "https://example.com/item2"
-    ),
-    Site(
-        id = "itm3",
-        name = "Item 3",
-        description = "Description for Item 3",
-        url = "https://example.com/item3"
-    ),
+        id = "tuv",
+        name = "Tripura University",
+        description = "Main Public Govt. University of Tripura",
+        url = "https://tripurauniv.ac.in/Page/Notification",
+        icon = R.drawable.tuv_logo,
+        parser = "tuv"
+    )
     // Add more items here as needed
 )

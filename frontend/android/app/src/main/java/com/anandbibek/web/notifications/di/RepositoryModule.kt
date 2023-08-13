@@ -2,6 +2,7 @@ package com.anandbibek.web.notifications.di
 
 import com.anandbibek.web.notifications.data.notices.impl.site.EmptyRepo
 import com.anandbibek.web.notifications.data.notices.impl.site.TPSCRepo
+import com.anandbibek.web.notifications.data.notices.impl.site.TripuraUniversityRepo
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.data.sites.impl.ListedSitesRepository
 import dagger.Module
@@ -30,6 +31,12 @@ object RepositoryModule {
     @Provides
     fun provideTPSCRepo() : TPSCRepo {
         return TPSCRepo()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTripuraUniversityRepo() : TripuraUniversityRepo {
+        return TripuraUniversityRepo()
     }
 
     @Singleton

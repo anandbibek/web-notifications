@@ -287,7 +287,8 @@ fun PreviewHeaderBox() {
         name = "TEST",
         description = "Description of the object",
         icon = R.drawable.pillars,
-        url = "https://tpsc.tripura.gov.in/"
+        url = "https://tpsc.tripura.gov.in/",
+        parser = "test"
     ), onSearchOpen = {})
 }
 

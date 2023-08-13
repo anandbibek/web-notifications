@@ -29,6 +29,6 @@ class NoticesRepositoryFactoryImpl(
 
 
     override fun getNoticesRepository(site: Site): NoticesRepository {
-        return repoMap[site.id] ?: defaultRepo;
+        return repoMap[site.parser] ?: defaultRepo;
     }
 }
