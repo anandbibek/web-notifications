@@ -3,7 +3,10 @@ package com.anandbibek.web.notifications
 import android.app.Application
 import com.anandbibek.web.notifications.data.AppContainer
 import com.anandbibek.web.notifications.data.AppContainerImpl
-import com.anandbibek.web.notifications.data.notices.NoticesRepository
+import com.anandbibek.web.notifications.data.notices.NoticesRepositoryFactory
+import com.anandbibek.web.notifications.data.notices.NoticesRepositoryFactoryImpl
+import com.anandbibek.web.notifications.data.notices.impl.site.EmptyRepo
+import com.anandbibek.web.notifications.data.notices.impl.site.TPSCRepo
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -20,11 +23,22 @@ class WebNotificationApplication : Application() {
     @Inject
     lateinit var staticSitesRepository: SitesRepository;
 
+    //@Inject
+    lateinit var noticesRepositoryFactory: NoticesRepositoryFactory;
+
     @Inject
-    lateinit var liveNoticesRepository: NoticesRepository;
+    lateinit var tpscRepo: TPSCRepo;
+
+    @Inject
+    lateinit var emptyRepo: EmptyRepo;
 
     override fun onCreate() {
         super.onCreate()
-        container = AppContainerImpl(this, staticSitesRepository, liveNoticesRepository)
+        noticesRepositoryFactory = NoticesRepositoryFactoryImpl(
+            hashMapOf(
+                Pair("tpsc", tpscRepo)
+            ), emptyRepo
+        );
+        container = AppContainerImpl(this, staticSitesRepository, noticesRepositoryFactory)
     }
 }

@@ -58,7 +58,7 @@ fun NavHostContainer(
             val homeViewModel: HomeViewModel = viewModel(
                 factory = HomeViewModel.provideFactory(
                     sitesRepository = appContainer.staticSitesRepository,
-                    noticesRepository = appContainer.liveNoticesRepository,
+                    noticesRepositoryFactory = appContainer.noticesRepositoryFactory,
                     //preSelectedSiteId = navBackStackEntry.arguments?.getString(SITE_ID)
                 )
             )

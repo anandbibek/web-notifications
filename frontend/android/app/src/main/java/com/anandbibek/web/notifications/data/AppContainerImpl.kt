@@ -1,7 +1,7 @@
 package com.anandbibek.web.notifications.data
 
 import android.content.Context
-import com.anandbibek.web.notifications.data.notices.NoticesRepository
+import com.anandbibek.web.notifications.data.notices.NoticesRepositoryFactory
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 
 /**
@@ -9,7 +9,7 @@ import com.anandbibek.web.notifications.data.sites.SitesRepository
  */
 interface AppContainer {
     val staticSitesRepository: SitesRepository
-    val liveNoticesRepository: NoticesRepository
+    val noticesRepositoryFactory: NoticesRepositoryFactory
 }
 
 /**
@@ -19,7 +19,7 @@ interface AppContainer {
 class AppContainerImpl(
     applicationContext: Context,
     override val staticSitesRepository: SitesRepository,
-    override val liveNoticesRepository: NoticesRepository
+    override val noticesRepositoryFactory: NoticesRepositoryFactory
 ) : AppContainer {
 
     //override val staticSitesRepository: SitesRepository = staticSitesRepository

@@ -4,12 +4,11 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.anandbibek.web.notifications.data.notices.NoticesRepository
+import com.anandbibek.web.notifications.data.notices.NoticesRepositoryFactory
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.model.ErrorMessage
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Site
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * UI state for the Home route.
@@ -92,10 +90,9 @@ private data class HomeViewModelState(
 /**
  * ViewModel that handles the business logic of the Home screen
  */
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel constructor(
     private val sitesRepository: SitesRepository,
-    private val noticesRepository: NoticesRepository
+    private val noticesRepositoryFactory: NoticesRepositoryFactory
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(
@@ -149,12 +146,12 @@ class HomeViewModel @Inject constructor(
         fetchNotices(context, site)
     }
 
-    private fun fetchNotices(context: Context, site : Site) {
+    private fun fetchNotices(context: Context, site: Site) {
         viewModelScope.launch {
-            val result = noticesRepository.get(
-                context, site,
-                onLoadStart = {setLoading(true)},
-                onLoadComplete = {setLoading(false)})
+            val result = noticesRepositoryFactory.getNoticesRepository(site)
+                .get(context, site,
+                    onLoadStart = { setLoading(true) },
+                    onLoadComplete = { setLoading(false) })
 
             viewModelState.update {
                 it.copy(
@@ -191,10 +188,10 @@ class HomeViewModel @Inject constructor(
     companion object {
         fun provideFactory(
             sitesRepository: SitesRepository,
-            noticesRepository: NoticesRepository
+            noticesRepositoryFactory: NoticesRepositoryFactory
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(sitesRepository, noticesRepository) as T
+                return HomeViewModel(sitesRepository, noticesRepositoryFactory) as T
             }
         }
     }
