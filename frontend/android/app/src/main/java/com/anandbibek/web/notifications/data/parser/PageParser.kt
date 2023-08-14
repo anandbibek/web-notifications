@@ -6,5 +6,5 @@ import org.jsoup.nodes.Document
 
 interface PageParser {
     suspend fun fetchOnline(page: Page): List<Notice>
-    fun process(doc: Document): List<Notice>
+    fun process(doc: Document, page: Page): List<Notice>
 }

@@ -84,12 +84,16 @@ fun ListWithWebNotices(
                         isSearchOpen = false
                     })
             }
-            if (!isSearchOpen)  {
+            if (!isSearchOpen) {
                 HeaderBox(site = it, onSearchOpen = { isSearchOpen = true })
+
+                TabScreen(
+                    tabs = it.pages.map { it.name },
+                    tabIndex = tabIndex,
+                    onTabChange = { tabIndex = it }
+                )
             }
-            TabScreen(tabs = it.pages.map { it.name }, tabIndex = tabIndex, onTabChange = { tabIndex =
-                it })
-            NoticeList(uiState, launcher, it, onSelectSite, searchQuery)
+            NoticeList(uiState, launcher, it, onSelectSite, searchQuery, tabIndex)
         }
     }
 
@@ -202,7 +206,8 @@ fun NoticeList(
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>,
     selectedSite: Site,
     onSelectSite: (Site) -> Unit,
-    searchQuery: String
+    searchQuery: String,
+    tabIndex: Int
 ) {
 
     //var refreshing by remember { mutableStateOf(uiState.isLoading) }
@@ -212,10 +217,13 @@ fun NoticeList(
 
     //val noticesFlow = onRefreshNotices(selectedSite)
     val noticeList by uiState.noticeList.collectAsState(initial = emptyList())
-    val filteredList = noticeList.filter {
-        notice -> searchQuery.isEmpty()
-            || notice.title.contains(searchQuery, ignoreCase = true)
-            || notice.data.contains(searchQuery, ignoreCase = true)
+    val filteredList = noticeList.filter { notice ->
+        if (searchQuery.isEmpty()) {
+            notice.pageName.equals(selectedSite.pages[tabIndex].name, ignoreCase = true)
+        } else {
+            notice.title.contains(searchQuery, ignoreCase = true)
+                    || notice.data.contains(searchQuery, ignoreCase = true)
+        }
     }
 
     Box(
@@ -303,7 +311,7 @@ fun PreviewHeaderBox() {
         url = "https://tpsc.tripura.gov.in/",
         parser = "test",
         pages = listOf(
-            Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parser = "tpsc")
+            Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parser = "tpsc", parseTree = "")
         )
     ), onSearchOpen = {})
 }

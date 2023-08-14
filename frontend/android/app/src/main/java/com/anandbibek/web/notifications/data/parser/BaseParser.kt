@@ -25,10 +25,10 @@ abstract class BaseParser : PageParser{
             .timeout(15000)
             .sslSocketFactory(socketFactory())
             .get();
-        process(doc);
+        process(doc, page);
     }
 
-    abstract override fun process(doc: Document): List<Notice>;
+    abstract override fun process(doc: Document, page: Page): List<Notice>;
 
     @SuppressLint("TrustAllX509TrustManager", "CustomX509TrustManager")
     private fun socketFactory(): SSLSocketFactory {

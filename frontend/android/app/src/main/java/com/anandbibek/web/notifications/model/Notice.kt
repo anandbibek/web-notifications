@@ -9,5 +9,6 @@ data class Notice(
     val data: String,
     val url: String,
     val time: Long,
-    var isStarred: Boolean = false
+    var pageName: String,
+    var isStarred: Boolean = false,
 )

@@ -165,7 +165,8 @@ fun PreviewGridCard() {
                 icon = R.drawable.pillars, url = "https://tpsc.tripura.gov.in/",
                 parser = "test",
                 pages = listOf(
-                    Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parser = "tpsc")
+                    Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parser = "tpsc",
+                        parseTree = "")
                 )
             ),
             onSelectPost = { /* nothing */ }
