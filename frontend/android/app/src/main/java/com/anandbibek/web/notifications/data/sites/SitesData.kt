@@ -24,7 +24,7 @@ val siteList = listOf(
     Site(
         id = "tuv",
         name = "Tripura University",
-        description = "Main Public Govt. University of Tripura",
+        description = "State Central University of Tripura",
         url = "https://tripurauniv.ac.in/Page/Notification",
         icon = R.drawable.tuv_logo,
         parser = "tuv",
