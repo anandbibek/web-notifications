@@ -4,9 +4,7 @@ import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Page
 import org.jsoup.nodes.Document
 
-class NoParser : BaseParser() {
-
-    override fun process(doc: Document, page: Page): List<Notice> {
-        return emptyList()
-    }
+interface ParserInterface {
+    suspend fun fetchOnline(page: Page): List<Notice>
+    fun process(doc: Document, page: Page): List<Notice>
 }

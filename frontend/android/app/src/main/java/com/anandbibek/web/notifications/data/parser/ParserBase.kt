@@ -16,7 +16,7 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-abstract class BaseParser : PageParser{
+abstract class ParserBase : ParserInterface{
 
     override suspend fun fetchOnline(page: Page): List<Notice> = withContext(Dispatchers.IO) {
         val doc = Jsoup.connect(page.url)

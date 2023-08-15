@@ -4,7 +4,7 @@ import android.app.Application
 import com.anandbibek.web.notifications.data.AppContainer
 import com.anandbibek.web.notifications.data.AppContainerImpl
 import com.anandbibek.web.notifications.data.notices.impl.LiveNoticesRepository
-import com.anandbibek.web.notifications.data.parser.NoParser
+import com.anandbibek.web.notifications.data.parser.NOPParser
 import com.anandbibek.web.notifications.data.parser.ParserFactory
 import com.anandbibek.web.notifications.data.parser.ParserFactoryImpl
 import com.anandbibek.web.notifications.data.parser.site.TPSCParser
@@ -37,7 +37,7 @@ class WebNotificationApplication : Application() {
     @Inject
     lateinit var tuvParser: TripuraUniversityParser;
     @Inject
-    lateinit var noParser: NoParser;
+    lateinit var noParser: NOPParser;
 
     override fun onCreate() {
         super.onCreate()

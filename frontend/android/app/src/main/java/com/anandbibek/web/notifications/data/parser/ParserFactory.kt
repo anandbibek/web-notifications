@@ -5,12 +5,12 @@ import com.anandbibek.web.notifications.model.Page
 /*@InstallIn(SingletonComponent::class)
 @EntryPoint*/
 interface ParserFactory {
-    fun getParser(page: Page): PageParser
+    fun getParser(page: Page): ParserInterface
 }
 
 class ParserFactoryImpl(
-    private val repoMap: HashMap<String, PageParser>,
-    private val defaultRepo: PageParser
+    private val repoMap: HashMap<String, ParserInterface>,
+    private val defaultRepo: ParserInterface
 ) : ParserFactory {
 
 //    @Inject
@@ -28,7 +28,7 @@ class ParserFactoryImpl(
 //    }
 
 
-    override fun getParser(page: Page): PageParser {
+    override fun getParser(page: Page): ParserInterface {
         return repoMap[page.parser] ?: defaultRepo;
     }
 }

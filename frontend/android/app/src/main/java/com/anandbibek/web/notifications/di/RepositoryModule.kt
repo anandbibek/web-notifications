@@ -1,7 +1,7 @@
 package com.anandbibek.web.notifications.di
 
 import com.anandbibek.web.notifications.data.notices.impl.LiveNoticesRepository
-import com.anandbibek.web.notifications.data.parser.NoParser
+import com.anandbibek.web.notifications.data.parser.NOPParser
 import com.anandbibek.web.notifications.data.parser.site.TPSCParser
 import com.anandbibek.web.notifications.data.parser.site.TripuraUniversityParser
 import com.anandbibek.web.notifications.data.sites.SitesRepository
@@ -48,7 +48,7 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideNoParser() : NoParser {
-        return NoParser()
+    fun provideNoParser() : NOPParser {
+        return NOPParser()
     }
 }

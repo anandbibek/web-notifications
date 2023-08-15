@@ -1,11 +1,11 @@
 package com.anandbibek.web.notifications.data.parser.site
 
-import com.anandbibek.web.notifications.data.parser.BaseParser
+import com.anandbibek.web.notifications.data.parser.ParserBase
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Page
 import org.jsoup.nodes.Document
 
-class TripuraUniversityParser : BaseParser() {
+class TripuraUniversityParser : ParserBase() {
 
     override fun process(doc: Document, page: Page): List<Notice> {
         // Select the <table> element with id "TblNotification"
