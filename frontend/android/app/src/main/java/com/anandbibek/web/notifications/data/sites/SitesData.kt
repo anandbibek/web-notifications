@@ -17,7 +17,7 @@ val siteList = listOf(
                 name = "Notices",
                 url = "https://tpsc.tripura.gov.in/",
                 parser = "tpsc",
-                parseTree = "ul#whats-new"
+                parseTree = "ul#whats-new li"
             )
         )
     ),

@@ -8,7 +8,7 @@ data class Notice(
     val title: String,
     val data: String,
     val url: String,
-    val time: Long,
     var pageName: String,
     var isStarred: Boolean = false,
+    val time: Long = System.currentTimeMillis()
 )

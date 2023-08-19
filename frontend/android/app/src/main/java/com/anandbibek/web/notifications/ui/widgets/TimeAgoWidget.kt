@@ -32,7 +32,7 @@ fun TimeAgoFormattedPreview() {
     MaterialTheme {
         Surface(color = Color.White) {
             TimeAgoFormatted(
-                System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1),
+                System.currentTimeMillis() - TimeUnit.HOURS.toMillis(96),
                 style = MaterialTheme.typography.labelSmall
             )
         }
@@ -49,7 +49,7 @@ fun getTimeAgoFormatted(timeInMillis: Long, prefixText: String): String {
     val days = TimeUnit.MILLISECONDS.toDays(timeDiffMillis)
 
     return prefixText + when {
-        days >= 1 -> "$hours day${if (days > 1) "s" else ""} ago"
+        days >= 1 -> "$days day${if (days > 1) "s" else ""} ago"
         hours >= 1 -> "$hours hour${if (hours > 1) "s" else ""} ago"
         minutes >= 1 -> "$minutes minute${if (minutes > 1) "s" else ""} ago"
         else -> "Now"

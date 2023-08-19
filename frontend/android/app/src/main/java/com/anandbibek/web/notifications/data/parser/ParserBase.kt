@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
@@ -29,6 +30,14 @@ abstract class ParserBase : ParserInterface{
     }
 
     abstract override fun process(doc: Document, page: Page): List<Notice>;
+
+    protected fun processText(element: Element?): String {
+        return element?.text()?.trim() ?: "";
+    }
+
+    protected fun processLink(element: Element?): String {
+        return element?.select("a")?.get(0)?.absUrl("href") ?: ""
+    }
 
     @SuppressLint("TrustAllX509TrustManager", "CustomX509TrustManager")
     private fun socketFactory(): SSLSocketFactory {
