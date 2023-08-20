@@ -8,11 +8,11 @@ import org.jsoup.nodes.Document
 class TripuraUniversityParser : ParserBase() {
 
     override fun process(doc: Document, page: Page): List<Notice> {
-        val tableRows = doc.select(page.parseTree)
+        val tableRows = doc.select(page.parsLane.selector)
         var index = 0;
         val notices = tableRows.map { row ->
-            val text = processText(row.select("td")[1])
-            val link = processLink(row.select("td")[2])
+            val text = processText(row, page.parsLane.parsLanes)
+            val link = processLink(row, page.parsLane.parsLanes)
             val data = link.substringAfterLast("/")
             Notice(index++, text, data, link, page.name)
 

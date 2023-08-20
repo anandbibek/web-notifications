@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Page
+import com.anandbibek.web.notifications.model.ParsLane
 import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.widgets.TabScreen
 import com.anandbibek.web.notifications.ui.widgets.TimeAgoFormatted
@@ -311,7 +312,7 @@ fun PreviewHeaderBox() {
         url = "https://tpsc.tripura.gov.in/",
         parser = "test",
         pages = listOf(
-            Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parser = "tpsc", parseTree = "")
+            Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parsLane = ParsLane("", ""))
         )
     ), onSearchOpen = {})
 }

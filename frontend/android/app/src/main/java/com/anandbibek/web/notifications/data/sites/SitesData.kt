@@ -2,6 +2,7 @@ package com.anandbibek.web.notifications.data.sites
 
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.model.Page
+import com.anandbibek.web.notifications.model.ParsLane
 import com.anandbibek.web.notifications.model.Site
 
 val siteList = listOf(
@@ -16,8 +17,20 @@ val siteList = listOf(
             Page(
                 name = "Notices",
                 url = "https://tpsc.tripura.gov.in/",
-                parser = "tpsc",
-                parseTree = "ul#whats-new li"
+                parsLane = ParsLane(
+                    metaKey = "BASE",
+                    selector = "ul#whats-new li",
+                    parsLanes = listOf(
+                        ParsLane(
+                            metaKey = "text",
+                            selector = "a:eq(0)"
+                        ),
+                        ParsLane(
+                            metaKey = "link",
+                            selector = "*:eq(0)"
+                        )
+                    )
+                )
             )
         )
     ),
@@ -32,20 +45,56 @@ val siteList = listOf(
             Page(
                 name = "Notification",
                 url = "https://tripurauniv.ac.in/Page/Notification",
-                parser = "tuv",
-                parseTree = "table#TblNotification tbody tr"
+                parsLane = ParsLane(
+                    metaKey = "BASE",
+                    selector = "table#TblNotification tbody tr",
+                    parsLanes = listOf(
+                        ParsLane(
+                            metaKey = "text",
+                            selector = "td:eq(1)"
+                        ),
+                        ParsLane(
+                            metaKey = "link",
+                            selector = "td:eq(2)"
+                        )
+                    )
+                )
             ),
             Page(
                 name = "Employment",
                 url = "https://tripurauniv.ac.in/Page/EmploymentNews",
-                parser = "tuv",
-                parseTree = "table#TblEmploymentNews tbody tr"
+                parsLane = ParsLane(
+                    metaKey = "BASE",
+                    selector = "table#TblEmploymentNews tbody tr",
+                    parsLanes = listOf(
+                        ParsLane(
+                            metaKey = "text",
+                            selector = "td:eq(1)"
+                        ),
+                        ParsLane(
+                            metaKey = "link",
+                            selector = "td:eq(2)"
+                        )
+                    )
+                )
             ),
             Page(
                 name = "Seminars",
                 url = "https://tripurauniv.ac.in/Page/AllSeminarlist",
-                parser = "tuv",
-                parseTree = "table#TblSeminarConfarenceWorkshop tbody tr"
+                parsLane = ParsLane(
+                    metaKey = "BASE",
+                    selector = "table#TblSeminarConfarenceWorkshop tbody tr",
+                    parsLanes = listOf(
+                        ParsLane(
+                            metaKey = "text",
+                            selector = "td:eq(1)"
+                        ),
+                        ParsLane(
+                            metaKey = "link",
+                            selector = "td:eq(2)"
+                        )
+                    )
+                )
             ),
         )
     )

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.data.sites.siteList
 import com.anandbibek.web.notifications.model.Page
+import com.anandbibek.web.notifications.model.ParsLane
 import com.anandbibek.web.notifications.model.Site
 import com.anandbibek.web.notifications.ui.theme.WebNotificationsTheme
 
@@ -165,8 +166,8 @@ fun PreviewGridCard() {
                 icon = R.drawable.pillars, url = "https://tpsc.tripura.gov.in/",
                 parser = "test",
                 pages = listOf(
-                    Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parser = "tpsc",
-                        parseTree = "")
+                    Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parsLane =
+                    ParsLane("", ""))
                 )
             ),
             onSelectPost = { /* nothing */ }

@@ -3,6 +3,7 @@ package com.anandbibek.web.notifications.data.parser
 import android.annotation.SuppressLint
 import com.anandbibek.web.notifications.model.Notice
 import com.anandbibek.web.notifications.model.Page
+import com.anandbibek.web.notifications.model.ParsLane
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -31,12 +32,22 @@ abstract class ParserBase : ParserInterface{
 
     abstract override fun process(doc: Document, page: Page): List<Notice>;
 
-    protected fun processText(element: Element?): String {
-        return element?.text()?.trim() ?: "";
+    protected fun processText(element: Element?, parsLanes: List<ParsLane>): String {
+        val newElement = element?.selectFirst(
+            parsLanes.first {
+                it.metaKey.contentEquals("text")
+            }.selector
+        )
+        return newElement?.text()?.trim() ?: "";
     }
 
-    protected fun processLink(element: Element?): String {
-        return element?.select("a")?.get(0)?.absUrl("href") ?: ""
+    protected fun processLink(element: Element?, parsLanes: List<ParsLane>): String {
+        val newElement = element?.selectFirst(
+            parsLanes.first {
+                it.metaKey.contentEquals("link")
+            }.selector
+        )
+        return newElement?.select("a")?.get(0)?.absUrl("href") ?: ""
     }
 
     @SuppressLint("TrustAllX509TrustManager", "CustomX509TrustManager")

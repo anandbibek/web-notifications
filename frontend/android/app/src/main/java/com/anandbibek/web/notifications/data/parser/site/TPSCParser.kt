@@ -8,11 +8,11 @@ import org.jsoup.nodes.Document
 class TPSCParser : ParserBase() {
 
     override fun process(doc: Document, page: Page): List<Notice> {
-        val liElements = doc.select("ul#whats-new li")
+        val liElements = doc.select(page.parsLane.selector)
         var index = 0;
         val notices = liElements.map { row ->
-            val text = processText(row.select("a")[0])
-            val link = processLink(row)
+            val text = processText(row, page.parsLane.parsLanes)
+            val link = processLink(row, page.parsLane.parsLanes)
             val data = link.substringAfterLast("/")
             Notice(index++, text, data, link, page.name)
         }

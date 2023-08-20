@@ -29,6 +29,6 @@ class ParserFactoryImpl(
 
 
     override fun getParser(page: Page): ParserInterface {
-        return repoMap[page.parser] ?: defaultRepo;
+        return repoMap["tpsc"] ?: defaultRepo;
     }
 }
