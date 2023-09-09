@@ -6,6 +6,5 @@ data class Site(
     val description: String,
     val icon: Int? = null,
     val url: String,
-    val parser: String,
     val pages: List<Page>
 )

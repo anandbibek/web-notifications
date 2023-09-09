@@ -310,7 +310,6 @@ fun PreviewHeaderBox() {
         description = "Description of the object",
         icon = R.drawable.pillars,
         url = "https://tpsc.tripura.gov.in/",
-        parser = "test",
         pages = listOf(
             Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parsLane = ParsLane("", ""))
         )

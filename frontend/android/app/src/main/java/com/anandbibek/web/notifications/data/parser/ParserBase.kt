@@ -42,11 +42,13 @@ abstract class ParserBase : ParserInterface{
     }
 
     protected fun processLink(element: Element?, parsLanes: List<ParsLane>): String {
-        val newElement = element?.selectFirst(
-            parsLanes.first {
-                it.metaKey.contentEquals("link")
-            }.selector
-        )
+        val newElement = parsLanes.firstOrNull {
+            it.metaKey.contentEquals("link")
+        }?.selector?.let {
+            element?.selectFirst(
+                it
+            )
+        }
         return newElement?.select("a")?.get(0)?.absUrl("href") ?: ""
     }
 

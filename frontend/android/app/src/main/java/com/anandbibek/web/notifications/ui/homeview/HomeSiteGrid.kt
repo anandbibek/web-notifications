@@ -140,14 +140,14 @@ fun GridItemCard(
             Text(
                 text = site.name,
                 style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
+                maxLines = 3,
                 modifier = Modifier.padding(8.dp)
             )
 
             Text(
                 text = site.description,
                 style = MaterialTheme.typography.bodySmall,
-                maxLines = 4,
+                maxLines = 6,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier.padding(8.dp)
             )
@@ -164,7 +164,6 @@ fun PreviewGridCard() {
             Site(
                 id = "testSite", name = "TEST", description = "Description of the object",
                 icon = R.drawable.pillars, url = "https://tpsc.tripura.gov.in/",
-                parser = "test",
                 pages = listOf(
                     Page(name = "Notices", url = "https://tpsc.tripura.gov.in/", parsLane =
                     ParsLane("", ""))

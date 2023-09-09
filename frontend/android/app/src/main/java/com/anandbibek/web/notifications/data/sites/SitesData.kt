@@ -12,7 +12,6 @@ val siteList = listOf(
         description = "Tripura Public Services Commission",
         icon = R.drawable.pillars,
         url = "https://tpsc.tripura.gov.in/",
-        parser = "tpsc",
         pages = listOf(
             Page(
                 name = "Notices",
@@ -40,7 +39,6 @@ val siteList = listOf(
         description = "State Central University of Tripura",
         url = "https://tripurauniv.ac.in/Page/Notification",
         icon = R.drawable.tuv_logo,
-        parser = "tuv",
         pages = listOf(
             Page(
                 name = "Notification",
@@ -96,6 +94,29 @@ val siteList = listOf(
                     )
                 )
             ),
+        )
+    ),
+    Site(
+        id = "riseq",
+        name = "National Center for Seismology",
+        description = "NCS is the nodal agency of GoI for monitoring earthquake activity in the country.",
+        url = "https://seismo.gov.in/",
+        icon = R.drawable.earthquake,
+        pages = listOf(
+            Page(
+                name = "Latest Earthquakes",
+                url = "https://riseq.seismo.gov.in/riseq/earthquake",
+                parsLane = ParsLane(
+                    metaKey = "BASE",
+                    selector = "ul.sidebar-nav li",
+                    parsLanes = listOf(
+                        ParsLane(
+                            metaKey = "text",
+                            selector = "*:eq(0)"
+                        )
+                    )
+                )
+            )
         )
     )
     // Add more items here as needed
