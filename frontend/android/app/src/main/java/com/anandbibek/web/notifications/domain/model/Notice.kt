@@ -1,4 +1,4 @@
-package com.anandbibek.web.notifications.model
+package com.anandbibek.web.notifications.domain.model
 
 import kotlinx.serialization.Serializable
 

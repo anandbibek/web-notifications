@@ -33,9 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anandbibek.web.notifications.R
 import com.anandbibek.web.notifications.data.sites.siteList
-import com.anandbibek.web.notifications.model.Page
-import com.anandbibek.web.notifications.model.ParsLane
-import com.anandbibek.web.notifications.model.Site
+import com.anandbibek.web.notifications.domain.model.Page
+import com.anandbibek.web.notifications.domain.model.ParsLane
+import com.anandbibek.web.notifications.domain.model.Site
 import com.anandbibek.web.notifications.ui.theme.WebNotificationsTheme
 
 

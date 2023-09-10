@@ -16,7 +16,7 @@
 
 package com.anandbibek.web.notifications.data.sites
 
-import com.anandbibek.web.notifications.model.Site
+import com.anandbibek.web.notifications.domain.model.Site
 
 /**
  * Interface to the Posts data layer.

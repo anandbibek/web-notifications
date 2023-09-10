@@ -1,7 +1,7 @@
 package com.anandbibek.web.notifications.data.parser
 
-import com.anandbibek.web.notifications.model.Notice
-import com.anandbibek.web.notifications.model.Page
+import com.anandbibek.web.notifications.domain.model.Notice
+import com.anandbibek.web.notifications.domain.model.Page
 import org.jsoup.nodes.Document
 
 interface ParserInterface {

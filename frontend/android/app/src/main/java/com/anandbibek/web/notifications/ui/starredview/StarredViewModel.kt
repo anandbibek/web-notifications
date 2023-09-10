@@ -2,7 +2,7 @@ package com.anandbibek.web.notifications.ui.starredview
 
 import androidx.lifecycle.ViewModel
 import com.anandbibek.web.notifications.data.notices.NoticesRepository
-import com.anandbibek.web.notifications.model.Notice
+import com.anandbibek.web.notifications.domain.model.Notice
 
 data class StarredUiState(
     val notices :List<Notice> = emptyList(),

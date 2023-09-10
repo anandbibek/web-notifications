@@ -1,8 +1,8 @@
 package com.anandbibek.web.notifications.data.parser.site
 
 import com.anandbibek.web.notifications.data.parser.ParserBase
-import com.anandbibek.web.notifications.model.Notice
-import com.anandbibek.web.notifications.model.Page
+import com.anandbibek.web.notifications.domain.model.Notice
+import com.anandbibek.web.notifications.domain.model.Page
 import org.jsoup.nodes.Document
 
 class TPSCParser : ParserBase() {

@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.anandbibek.web.notifications.model.Site
+import com.anandbibek.web.notifications.domain.model.Site
 import com.anandbibek.web.notifications.ui.homeview.HomeScreenType.Notices
 import com.anandbibek.web.notifications.ui.homeview.HomeScreenType.Sites
 import com.anandbibek.web.notifications.ui.homeview.HomeScreenType.SitesWithNotices

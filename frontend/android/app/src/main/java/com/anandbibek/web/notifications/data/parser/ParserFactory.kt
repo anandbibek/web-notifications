@@ -1,6 +1,6 @@
 package com.anandbibek.web.notifications.data.parser
 
-import com.anandbibek.web.notifications.model.Page
+import com.anandbibek.web.notifications.domain.model.Page
 
 /*@InstallIn(SingletonComponent::class)
 @EntryPoint*/

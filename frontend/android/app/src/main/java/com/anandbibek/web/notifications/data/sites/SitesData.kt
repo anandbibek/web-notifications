@@ -1,9 +1,9 @@
 package com.anandbibek.web.notifications.data.sites
 
 import com.anandbibek.web.notifications.R
-import com.anandbibek.web.notifications.model.Page
-import com.anandbibek.web.notifications.model.ParsLane
-import com.anandbibek.web.notifications.model.Site
+import com.anandbibek.web.notifications.domain.model.Page
+import com.anandbibek.web.notifications.domain.model.ParsLane
+import com.anandbibek.web.notifications.domain.model.Site
 
 val siteList = listOf(
     Site(
@@ -101,7 +101,8 @@ val siteList = listOf(
         name = "National Center for Seismology",
         description = "NCS is the nodal agency of GoI for monitoring earthquake activity in the country.",
         url = "https://seismo.gov.in/",
-        icon = R.drawable.earthquake,
+        icon = R.drawable.earthquake
+        ,
         pages = listOf(
             Page(
                 name = "Latest Earthquakes",

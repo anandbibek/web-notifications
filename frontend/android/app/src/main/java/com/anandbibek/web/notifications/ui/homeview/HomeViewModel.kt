@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.anandbibek.web.notifications.data.notices.impl.LiveNoticesRepository
 import com.anandbibek.web.notifications.data.parser.ParserFactory
 import com.anandbibek.web.notifications.data.sites.SitesRepository
-import com.anandbibek.web.notifications.model.ErrorMessage
-import com.anandbibek.web.notifications.model.Notice
-import com.anandbibek.web.notifications.model.Site
+import com.anandbibek.web.notifications.domain.model.ErrorMessage
+import com.anandbibek.web.notifications.domain.model.Notice
+import com.anandbibek.web.notifications.domain.model.Site
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

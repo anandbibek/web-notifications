@@ -1,9 +1,9 @@
 package com.anandbibek.web.notifications.data.parser
 
 import android.annotation.SuppressLint
-import com.anandbibek.web.notifications.model.Notice
-import com.anandbibek.web.notifications.model.Page
-import com.anandbibek.web.notifications.model.ParsLane
+import com.anandbibek.web.notifications.domain.model.Notice
+import com.anandbibek.web.notifications.domain.model.Page
+import com.anandbibek.web.notifications.domain.model.ParsLane
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup

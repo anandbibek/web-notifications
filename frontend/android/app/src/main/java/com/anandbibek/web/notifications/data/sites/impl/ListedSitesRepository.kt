@@ -2,7 +2,7 @@ package com.anandbibek.web.notifications.data.sites.impl
 
 import com.anandbibek.web.notifications.data.sites.SitesRepository
 import com.anandbibek.web.notifications.data.sites.siteList
-import com.anandbibek.web.notifications.model.Site
+import com.anandbibek.web.notifications.domain.model.Site
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
